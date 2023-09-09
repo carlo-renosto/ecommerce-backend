@@ -1,2 +1,2 @@
 # product-manager
-Aplicación web hecha en JavaScript utilizando NodeJS y Express.js.
+Aplicación web backend hecha en JavaScript utilizando NodeJS y Express.js.
