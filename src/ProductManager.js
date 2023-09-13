@@ -31,36 +31,71 @@ export class ProductManager {
                 return false;
             }
             else {
-                throw new Error("No es posible leer el archivo");
+                throw new Error("file-missing");
             }
         }
         catch(error) {
-            throw error;
+            if(Error(error).message.includes("file-missing")) {
+                return -1;
+            }
+            return 0;
         }
     }
 
-    async addProduct(title, description, price, thumbnail, code, stock) {
-        const exists = await this.productExists(code);
-
-        if (exists) {
-            console.log("\nError: Code already exists");
-            return;
+    productIsEmpty(p) {
+        if(p.title == undefined || p.description == undefined || p.code == undefined || p.price == undefined || p.stock == undefined || p.category == undefined)  {
+            return true;
         }
 
-        const newId = await this.getLatestId();
+        return false;
+    }
 
-        const newProduct = {
-            id: newId,
-            title,
-            description,
-            price,
-            thumbnail,
-            code,
-            stock
-        };
+    async addProduct(product) {
+        var result = 0;
+        try {
+            const isEmpty = this.productIsEmpty(product);
+            const exists = await this.productExists(product.code);
 
-        await this.addProductFile(newProduct);
-        console.log(`\nProducto agregado (ID ${newProduct.id}, code ${newProduct.code})`);
+            if(isEmpty) {
+                throw new Error("product-missing-fields");
+            }
+            if(exists) {
+                throw new Error("product-exists");
+            }
+
+            if(product.thumbnails == undefined) {
+                product.thumbnails = [];
+            }
+    
+            const newId = await this.getLatestId();
+    
+            const newProduct = {
+                id: newId,
+                title: product.title,
+                description: product.description,
+                code: product.code,
+                price: product.price,
+                status: true,
+                stock: product.stock,
+                category: product.category,
+                thumbnails: product.thumbnails,
+            };
+            
+            result = await this.addProductFile(newProduct);
+            return 1;
+        }
+        catch(error) {
+            if(result == -1) {
+                return -1;
+            }
+            if(Error(error).message.includes("product-missing-fields")) {
+                return -2;
+            }
+            if(Error(error).message.includes("product-exists")) {
+                return -3;
+            }
+            return 0;
+        }
     }
 
     async addProductFile(product) {
@@ -71,13 +106,17 @@ export class ProductManager {
                 this.products.push(product);
 
                 await fs.promises.writeFile(this.path, JSON.stringify(this.products, null, "\t"));
+                return 1;
             }
             else {
-                throw new Error("No es posible leer el archivo");
+                throw new Error("file-missing");
             }
         }
         catch(error) {
-            throw error;
+            if(Error(error).message.includes("file-missing")) {
+                return -1;
+            }
+            return 0;
         }
     }
 
@@ -96,11 +135,14 @@ export class ProductManager {
                 return this.products;
             } 
             else {
-                throw new Error("No es posible leer el archivo");
+                throw new Error("file-missing");
             }
         } 
-        catch (error) {
-            throw error;
+        catch(error) {
+            if(Error(error).message.includes("file-missing")) {
+                return -1;
+            }
+            return 0;
         }
     }
 
@@ -110,30 +152,41 @@ export class ProductManager {
                 this.getProducts();
 
                 if(this.fileIsEmpty(this.products)) {
-                    throw new Error("El archivo se encuentra vacio");
+                    throw new Error("file-empty");
                 }
                 else {
                     var index = this.products.findIndex(prod => prod.id === id);
                     if(index == -1) {
-                        console.log("\nError: ID " + id + " not found (updateProduct)");
-                        return;
+                        throw new Error("product-missing");
                     }
                     if(product.id && product.id != id) {
-                        console.log("\nError: El ID no puede ser modificado (updateProduct)");
+                        throw new Error("id-modified");
                     }
 
                     this.products[index] = {...this.products[index], ...product}
      
                     await fs.promises.writeFile(this.path, JSON.stringify(this.products, null, "\t"));
-                    console.log("\nProducto actualizado (ID " + id + ")");
+                    return 1;
                 }
             }
             else {
-                throw new Error("No es posible leer el archivo");
+                throw new Error("file-missing");
             }
         }
         catch(error) {
-            throw error;
+            if(Error(error).message.includes("file-missing")) {
+                return -1;
+            }
+            if(Error(error).message.includes("file-empty")) {
+                return -2;
+            }
+            if(Error(error).message.includes("product-missing")) {
+                return -3;
+            }
+            if(Error(error).message.includes("id-modified")) {
+                return -4;
+            }
+            return 0;
         }
     }
 
@@ -143,7 +196,7 @@ export class ProductManager {
                 this.getProducts();
 
                 if(this.fileIsEmpty(this.products)) {
-                    throw new Error("El archivo se encuentra vacio");
+                    throw new Error("file-empty");
                 }
                 else {
                     const product = this.products.find(prod => prod.id === id);
@@ -158,19 +211,28 @@ export class ProductManager {
                         });
 
                         await fs.promises.writeFile(this.path, JSON.stringify(productsAux, null, "\t"));
-                        console.log("\nProducto eliminado (ID " + id + ", code " + product.code + ")");
+                        return 1;
                     }
                     else {
-                        console.log("\nError: ID " + id + " not found (deleteProduct)");
+                        throw new Error("product-missing");
                     }
                 }
             }
             else {
-                throw new Error("No es posible leer el archivo");
+                throw new Error("file-missing");
             }
         }
         catch(error) {
-            throw error;
+            if(Error(error).message.includes("file-missing")) {
+                return -1;
+            }
+            if(Error(error).message.includes("file-empty")) {
+                return -2;
+            }
+            if(Error(error).message.includes("product-missing")) {
+                return -3;
+            }
+            return 0;
         }
     }
 
@@ -180,22 +242,32 @@ export class ProductManager {
                 this.getProducts();
                 
                 if(this.fileIsEmpty(this.products)) {
-                    throw new Error("El archivo se encuentra vacio");
+                    throw new Error("file-empty");
                 }
+
                 const product = this.products.find(prod => prod.id === id);
                 
                 if(!product) {
-                    console.log("\nError: ID " + id + " not found (getProductById)");
+                    throw new Error("product-missing");
                 }
 
                 return product;
             }
             else {
-                throw new Error("No es posible leer el archivo");
+                throw new Error("file-missing");
             }
         }
         catch(error) {
-            throw error;
+            if(Error(error).message.includes("file-missing")) {
+                return -1;
+            }
+            if(Error(error).message.includes("file-empty")) {
+                return -2;
+            }
+            if(Error(error).message.includes("product-missing")) {
+                return -3;
+            }
+            return 0;
         }
     }
 
@@ -212,11 +284,14 @@ export class ProductManager {
                 }
             }
             else {
-                throw new Error("No es posible leer el archivo");
+                throw new Error("file-missing");
             }
         }
         catch(error) {
-            throw error;
+            if(Error(error).message.includes("file-missing")) {
+                return -1;
+            }
+            return 0;
         }
     }
 }
