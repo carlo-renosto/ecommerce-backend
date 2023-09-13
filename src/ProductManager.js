@@ -149,7 +149,7 @@ export class ProductManager {
     async updateProduct(id, product) {
         try {
             if(this.fileExists()) {
-                this.getProducts();
+                await this.getProducts();
 
                 if(this.fileIsEmpty(this.products)) {
                     throw new Error("file-empty");
@@ -193,7 +193,7 @@ export class ProductManager {
     async deleteProduct(id) {
         try {
             if(this.fileExists()) {
-                this.getProducts();
+                await this.getProducts();
 
                 if(this.fileIsEmpty(this.products)) {
                     throw new Error("file-empty");
@@ -239,7 +239,7 @@ export class ProductManager {
     async getProductById(id) {
         try {
             if(this.fileExists()) {
-                this.getProducts();
+                await this.getProducts();
                 
                 if(this.fileIsEmpty(this.products)) {
                     throw new Error("file-empty");
@@ -274,7 +274,7 @@ export class ProductManager {
     async getLatestId() {
         try {
             if(this.fileExists()) {
-                this.getProducts();
+                await this.getProducts();
 
                 if(this.fileIsEmpty(this.products)) {
                     return 1;

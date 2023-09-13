@@ -33,8 +33,8 @@ router.post("/", async(request, response) => {
 });
 
 router.post("/:cid/product/:pid", async(request, response) => {
-    const cid = request.params.cid;
-    const pid = request.params.pid;
+    const cid = parseInt(request.params.cid);
+    const pid = parseInt(request.params.pid);
 
     const result = await cartManager.addProductToCart(cid, pid);
 

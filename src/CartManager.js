@@ -24,7 +24,7 @@ export class CartManager {
     }
 
     async addCart() {
-        var result = 1;
+        var result = 0;
         try {
             const newId = await this.getLatestId();
     
@@ -103,7 +103,7 @@ export class CartManager {
     async updateCartFile(cart, pid) {
         try {
             if(this.fileExists()) {
-                this.getCarts();
+                await this.getCarts();
 
                 var index = cart.products.findIndex(prod => prod.id == pid);
                 if(index == -1) {
@@ -160,7 +160,7 @@ export class CartManager {
     async getCartById(id) {
         try {
             if(this.fileExists()) {
-                this.getCarts();
+                await this.getCarts();
                 
                 if(this.fileIsEmpty(this.carts)) {
                     throw new Error("file-empty");
@@ -195,7 +195,7 @@ export class CartManager {
     async getLatestId() {
         try {
             if(this.fileExists()) {
-                this.getCarts();
+                await this.getCarts();
 
                 if(this.fileIsEmpty(this.carts)) {
                     return 1;
