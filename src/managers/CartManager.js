@@ -71,7 +71,7 @@ export class CartManager {
         try {
             if(this.fileExists()) {
                 var cart = await this.getCartById(cid);
-                if(!cart) {
+                if(cart.id == undefined) {
                     throw new Error("cart-missing");
                 }
                 var prod = await productManager.getProductById(pid);

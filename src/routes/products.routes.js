@@ -1,6 +1,7 @@
 
 import { Router } from "express";
-import { ProductManager } from "../ProductManager.js";
+import { ProductManager } from "../managers/ProductManager.js";
+import { socket_server } from "../app.js"
 
 const router = Router();
 const productManager = new ProductManager("./products.json");
@@ -19,7 +20,6 @@ router.get("/", async(request, response) => {
         const products = limit ? result.slice(0, limit) : result;
         response.send(products);
     }
-    
 });
 
 router.get("/:pid", async(request, response) => {
@@ -50,6 +50,11 @@ router.post("/", async(request, response) => {
         case -3: response.status(500).json({message: `Error: Producto ya existe (code ${product.code})`}); break;
         default: response.status(500).json({message: `Error inesperado`});
     }
+
+    if(result == 1) {
+        const products = await productManager.getProducts();
+        socket_server.emit("update", products);
+    }
 });
 
 router.put("/:pid", async(request, response) => {
@@ -65,6 +70,11 @@ router.put("/:pid", async(request, response) => {
         case -4: response.status(404).json({message: `Error: Campo no modificable (id)`}); break;
         default: response.status(500).json({message: `Error inesperado`});
     }
+
+    if(result == 1) {
+        const products = await productManager.getProducts();
+        socket_server.emit("update", products);
+    }
 });
 
 router.delete("/:pid", async(request, response) => {
@@ -77,6 +87,11 @@ router.delete("/:pid", async(request, response) => {
         case -2: response.status(500).json({message: `Error: Archivo vacio (products.json)`}); break;
         case -3: response.status(404).json({message: `Error: Producto no existe (id ${id})`}); break;
         default: response.status(500).json({message: `Error inesperado`});
+    }
+
+    if(result == 1) {
+        const products = await productManager.getProducts();
+        socket_server.emit("update", products);
     }
 });
 

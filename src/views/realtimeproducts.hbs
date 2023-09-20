@@ -1,0 +1,72 @@
+<style>
+    table {
+        border: 1px solid black;
+    }
+    th {
+         border: 1px solid black;
+         padding: 5px;
+    }
+    td {
+        border: 1px solid black;
+        padding: 5px;
+    }
+</style>
+
+<table >
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Titulo</th>
+        <th>Descripcion</th>
+        <th>Codigo</th>
+        <th>Precio</th>
+        <th>Stock</th>
+        <th>Categoria</th>
+        <th>Imagen</th>
+    </tr>
+    </thead>
+    <tbody id="products-table"></tbody>
+</table>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    const client_socket = io();
+    client_socket.emit("connection");
+
+    let products = [];
+
+    client_socket.on("products", (data) => {
+        updateProducts(data);
+    });
+    client_socket.on("update", (data) => {
+        updateProducts(data);
+    });
+
+    function updateProducts(data) {
+        products = data;
+        fillTable(); 
+    }
+</script>
+<script>
+    function fillTable() {
+        const tbody = document.getElementById("products-table");
+
+        tbody.innerHTML = '';
+
+        for (const product of products) {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+                <td>${product.id}</td>
+                <td>${product.title}</td>
+                <td>${product.description}</td>
+                <td>${product.code}</td>
+                <td>$${product.price}</td>
+                <td>${product.stock}</td>
+                <td>${product.category}</td>
+                <td>${product.thumbnail}</td>
+            `;
+            tbody.appendChild(row);
+            console.log()
+        }
+    }
+</script>
