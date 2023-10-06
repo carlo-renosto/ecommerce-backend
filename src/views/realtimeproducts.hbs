@@ -54,9 +54,11 @@
         tbody.innerHTML = '';
 
         for (const product of products) {
+            if(product.thumbnail == undefined) product.thumbnail = "";
+
             const row = document.createElement("tr");
             row.innerHTML = `
-                <td>${product.id}</td>
+                <td>${product._id}</td>
                 <td>${product.title}</td>
                 <td>${product.description}</td>
                 <td>${product.code}</td>

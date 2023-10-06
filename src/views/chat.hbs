@@ -1,0 +1,66 @@
+
+ <style>
+    #centered-div {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 1000px;
+        height: 600px;
+        background-color: #fff;
+        border: 1px solid #ccc;
+    }
+
+    #message_submit {
+        position: fixed;
+        top: 90%;
+        left: 45%;
+        transform: translate(-45%, -90%);
+    }
+
+    #button {
+        position: fixed;
+        top: 90%;
+        left: 60%;
+        transform: translate(-60%, -90%);
+    }
+
+    #message {
+        background-color: #fff;
+        border: 1px solid black;
+    }
+</style>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    const client_socket = io();
+    client_socket.emit("connection");
+
+    client_socket.on("messages", (data) => {
+        displayMessages(data);
+    });
+
+    function displayMessages(array) {
+    const container = document.getElementById('centered-div');
+    const ul = document.createElement('ul');
+
+    array.forEach(obj => {
+        const li = document.createElement('li');
+        li.textContent = `(${obj.user}): ${obj.message}`;
+        ul.appendChild(li);
+    });
+
+    container.appendChild(ul);
+}
+</script>
+
+<div id="centered-div">
+    {{#each messages}}
+        <p id="message">{{this.user}} {{this.message}}</p>
+    {{/each}}
+
+    <form method="post" action="/chat">
+        <input id="message_submit" type="text" name="message"> 
+        <input id="button" type="submit" value="Enviar">
+    </form>
+</div>

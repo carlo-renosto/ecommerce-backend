@@ -1,49 +1,42 @@
 
 import { Router } from "express";
-import { CartManager } from "../managers/CartManager.js";
+import { CartManagerM } from "../dao/index.js";
 
 const router = Router();
-const cartManager = new CartManager("./carts.json");
 
 router.get("/:cid", async(request, response) => {
-    const id = parseInt(request.params.cid);
-    const result = await cartManager.getCartById(id);
+    try {
+        const id = request.params.cid;
 
-    if(result.id != undefined) {
-        response.send(result);
+        const cart = await CartManagerM.getCartById(id);
+        response.json({status: "success", data: cart});
     }
-    else {
-        switch(result) {
-            case -1: response.status(404).json({message: `Error: Archivo no existe (carts.json)`}); break;
-            case -2: response.status(500).json({message: `Error: Archivo vacio (carts.json)`}); break;
-            case -3: response.status(404).json({message: `Error: Carrito no existe (id ${id})`}); break;
-            default: response.status(500).json({message: `Error inesperado`});
-        }
+    catch(error) {
+        response.json({status: "error", message: "Carrito no obtenido (error)"});
     }
+
 });
 
 router.post("/", async(request, response) => {
-    const result = await cartManager.addCart();
-
-    switch(result) {
-        case 1: response.json({message: `Carrito agregado`}); break;
-        case -1: response.status(404).json({message: `Error: Archivo no existe (carts.json)`}); break;
-        default: response.status(500).json({message: `Error inesperado`});
+    try {
+        const cart = await CartManagerM.createCart();
+        response.json({status: "success", data: cart});
+    }
+    catch(error) {
+        response.json({status: "error", message: "Carrito no agregado (error)"});
     }
 });
 
 router.post("/:cid/product/:pid", async(request, response) => {
-    const cid = parseInt(request.params.cid);
-    const pid = parseInt(request.params.pid);
+    try {
+        const cid = request.params.cid;
+        const pid = request.params.pid;
 
-    const result = await cartManager.addProductToCart(cid, pid);
-
-    switch(result) {
-        case 1: response.json({message: `Producto agregado (cart id ${cid}, product id ${pid})`}); break;
-        case -1: response.status(404).json({message: `Error: Archivo no existe (products.json)`}); break;
-        case -2: response.status(404).json({message: `Error: Carrito no existe (id ${cid}`}); break;
-        case -3: response.status(404).json({message: `Error: Producto no existe (id ${pid})`}); break;
-        default: response.status(500).json({message: `Error inesperado`});
+        const cart = await CartManagerM.updateCart(cid, pid);
+        response.json({status: "success", data: cart});
+    }
+    catch(error) {
+        response.json({status: "error", message: "Carrito no actualizado (error)"});
     }
 });
 

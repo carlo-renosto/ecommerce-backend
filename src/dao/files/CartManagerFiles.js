@@ -1,6 +1,6 @@
 
 import fs from "fs";
-import { ProductManager } from "./ProductManager.js"
+import { ProductManager } from "./ProductManagerFiles.js"
 
 const productManager = new ProductManager("./products.json");
 
@@ -216,3 +216,5 @@ export class CartManager {
         }
     }
 }
+
+export { CartManager as CartManagerFiles };

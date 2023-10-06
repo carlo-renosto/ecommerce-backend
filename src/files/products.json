@@ -5,10 +5,9 @@
 		"description": "Este es un producto prueba",
 		"code": "abc123",
 		"price": 200,
-		"status": true,
 		"stock": 25,
 		"category": "",
-		"thumbnail": []
+		"thumbnails": []
 	},
 	{
 		"id": 2,
@@ -16,10 +15,9 @@
 		"description": "Este es un producto prueba",
 		"code": "abc124",
 		"price": 230,
-		"status": true,
 		"stock": 40,
 		"category": "",
-		"thumbnail": []
+		"thumbnails": []
 	},
 	{
 		"id": 3,
@@ -27,10 +25,9 @@
 		"description": "Este es un producto prueba",
 		"code": "abc125",
 		"price": 400,
-		"status": true,
 		"stock": 25,
 		"category": "",
-		"thumbnail": []
+		"thumbnails": []
 	},
 	{
 		"id": 4,
@@ -38,10 +35,9 @@
 		"description": "Este es un producto prueba",
 		"code": "abc126",
 		"price": 560,
-		"status": true,
 		"stock": 20,
 		"category": "",
-		"thumbnail": []
+		"thumbnails": []
 	},
 	{
 		"id": 5,
@@ -49,10 +45,9 @@
 		"description": "Este es un producto prueba",
 		"code": "abc127",
 		"price": 1000,
-		"status": true,
 		"stock": 5,
 		"category": "",
-		"thumbnail": []
+		"thumbnails": []
 	},
 	{
 		"id": 6,
@@ -60,10 +55,9 @@
 		"description": "Este es un producto prueba",
 		"code": "abc128",
 		"price": 100,
-		"status": true,
 		"stock": 10,
 		"category": "",
-		"thumbnail": []
+		"thumbnails": []
 	},
 	{
 		"id": 7,
@@ -71,10 +65,9 @@
 		"description": "Este es un producto prueba",
 		"code": "abc129",
 		"price": 550,
-		"status": true,
 		"stock": 100,
 		"category": "",
-		"thumbnail": []
+		"thumbnails": []
 	},
 	{
 		"id": 8,
@@ -82,10 +75,9 @@
 		"description": "Este es un producto prueba",
 		"code": "abc130",
 		"price": 920,
-		"status": true,
 		"stock": 30,
 		"category": "",
-		"thumbnail": []
+		"thumbnails": []
 	},
 	{
 		"id": 9,
@@ -93,10 +85,9 @@
 		"description": "Este es un producto prueba",
 		"code": "abc131",
 		"price": 220,
-		"status": true,
 		"stock": 25,
 		"category": "",
-		"thumbnail": []
+		"thumbnails": []
 	},
 	{
 		"id": 10,
@@ -104,10 +95,9 @@
 		"description": "Este es un producto prueba",
 		"code": "abc132",
 		"price": 120,
-		"status": true,
 		"stock": 50,
 		"category": "",
-		"thumbnail": []
+		"thumbnails": []
 	},
 	{
 		"id": 11,
@@ -115,7 +105,6 @@
 		"description": "Este es un producto prueba",
 		"code": "abc133",
 		"price": 120,
-		"status": true,
 		"stock": 400,
 		"category": "",
 		"thumbnails": []

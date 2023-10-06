@@ -1,98 +1,83 @@
 
 import { Router } from "express";
-import { ProductManager } from "../managers/ProductManager.js";
+import { ProductManagerM } from "../dao/index.js";
 import { socket_server } from "../app.js"
 
 const router = Router();
-const productManager = new ProductManager("./products.json");
 
 router.get("/", async(request, response) => {
-    const limit = parseInt(request.query.limit);
-    const result = await productManager.getProducts();
-
-    if(result == -1) {
-        response.status(404).json({message: `Error: Archivo no existe (products.json)`});
+    try {
+        const limit = parseInt(request.query.limit);
+        var products = await ProductManagerM.getProducts();
+        
+        products = limit ? products.slice(0, limit) : products;
+        
+        response.json({status: "success", data: products});
     }
-    else if(result == 0) {
-        response.status(500).json({message: `Error inesperado`});
-    }
-    else {
-        const products = limit ? result.slice(0, limit) : result;
-        response.send(products);
+    catch(error) {
+        response.json({status: "error", message: "Productos no obtenidos (error)"});
     }
 });
 
 router.get("/:pid", async(request, response) => {
-    const id = parseInt(request.params.pid);
-    const result = await productManager.getProductById(id);
+    try {
+        const id = request.params.pid;
 
-    if(result.id != undefined) {
-        response.send(result);
+        const product = await ProductManagerM.getProductById(id);
+        response.json({status: "success", data: product});
     }
-    else {
-        switch(result) {
-            case -1: response.status(404).json({message: `Error: Archivo no existe (products.json)`}); break;
-            case -2: response.status(500).json({message: `Error: Archivo vacio (products.json)`}); break;
-            case -3: response.status(404).json({message: `Error: Producto no existe (id ${id})`}); break;
-            default: response.status(500).json({message: `Error inesperado`});
-        }
+    catch(error) {
+        response.json({status: "error", message: "Producto no obtenido (error)"});
     }
 });
 
 router.post("/", async(request, response) => {
-    const product = request.body;
-    const result = await productManager.addProduct(product);
+    try {
+        const productInfo = request.body;
+        const productCreated = await ProductManagerM.createProduct(productInfo)
 
-    switch(result) {
-        case 1: response.json({message: `Producto agregado (code ${product.code})`}); break;
-        case -1: response.status(404).json({message: `Error: Archivo no existe (products.json)`}); break;
-        case -2: response.status(500).json({message: `Error: Campos faltantes`}); break;
-        case -3: response.status(500).json({message: `Error: Producto ya existe (code ${product.code})`}); break;
-        default: response.status(500).json({message: `Error inesperado`});
-    }
-
-    if(result == 1) {
-        const products = await productManager.getProducts();
+        const products = await ProductManagerM.getProducts();
         socket_server.emit("update", products);
+
+        response.json({status: "success", data: productCreated});
+    }
+    catch(error) {
+        response.json({status: "error", message: "Producto no agregado (error)"});
     }
 });
 
 router.put("/:pid", async(request, response) => {
-    const id = parseInt(request.params.pid);
-    const product = request.body;
-    const result = await productManager.updateProduct(id, product);
+    try {
+        const id = request.params.pid;
+        const productInfo = request.body;
 
-    switch(result) {
-        case 1: response.json({message: `Producto actualizado (id ${id})`}); break;
-        case -1: response.status(404).json({message: `Error: Archivo no existe (products.json)`}); break;
-        case -2: response.status(500).json({message: `Error: Archivo vacio (products.json)`}); break;
-        case -3: response.status(404).json({message: `Error: Producto no existe (id ${id})`}); break;
-        case -4: response.status(404).json({message: `Error: Campo no modificable (id)`}); break;
-        default: response.status(500).json({message: `Error inesperado`});
-    }
+        const productUpdated = await ProductManagerM.updateProduct(id, productInfo);
 
-    if(result == 1) {
-        const products = await productManager.getProducts();
+        const products = await ProductManagerM.getProducts();
         socket_server.emit("update", products);
+
+        response.json({status: "success", data: productUpdated});
+    }
+    catch(error) {
+        response.json({status: "error", message: "Producto no actualizado (error)"});
     }
 });
 
 router.delete("/:pid", async(request, response) => {
-    const id = parseInt(request.params.pid);
-    const result = await productManager.deleteProduct(id);
+    try {
+        const id = request.params.pid;
 
-    switch(result) {
-        case 1: response.json({message: `Producto eliminado (id ${id})`}); break;
-        case -1: response.status(404).json({message: `Error: Archivo no existe (products.json)`}); break;
-        case -2: response.status(500).json({message: `Error: Archivo vacio (products.json)`}); break;
-        case -3: response.status(404).json({message: `Error: Producto no existe (id ${id})`}); break;
-        default: response.status(500).json({message: `Error inesperado`});
-    }
+        await ProductManagerM.deleteProduct(id);
 
-    if(result == 1) {
-        const products = await productManager.getProducts();
+        const products = await ProductManagerM.getProducts();
         socket_server.emit("update", products);
+
+        response.json({status: "success", pid: id});
     }
+    catch(error) {
+        response.json({status: "error", message: "Producto no eliminado (error)"});
+    }
+    
 });
 
 export { router as productsRouter };
