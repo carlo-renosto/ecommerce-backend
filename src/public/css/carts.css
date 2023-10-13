@@ -10,3 +10,23 @@
     display: table-cell;
     padding: 10px;
 }
+
+h4, button {
+    display: inline-block;
+}
+
+form {
+    margin-bottom: 10px;
+}
+
+.button {
+    margin-left: 10px;
+}
+
+.hidden {
+    display: none;
+}
+
+.visible {
+    display: block;
+}

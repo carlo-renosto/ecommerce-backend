@@ -34,20 +34,18 @@ router.get("/realtimeproducts", async(request, response) => {
 });
 
 router.get("/carts", async(request, response) => {
-    
-
     response.render("carts");
 });
 
 router.get("/carts/:cid", async(request, response) => {
     try {
-        const cid = request.params.cid;
+        const cid = request.query.cid || request.params.cid;
 
         const cart = await CartManagerM.getCartById(cid);
         response.render("carts", cart);
     }
     catch(error) {
-        response.json({status: "error", message: "Carrito no obtenido (error)"});
+        response.render("carts");
     }
 });
 
