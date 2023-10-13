@@ -4,14 +4,16 @@ import { ProductManagerM } from "../dao/index.js";
 import { socket_server } from "../app.js"
 
 const router = Router();
-
+ 
 router.get("/", async(request, response) => {
     try {
-        const limit = parseInt(request.query.limit);
-        var products = await ProductManagerM.getProducts();
-        
-        products = limit ? products.slice(0, limit) : products;
-        
+        const limit = request.query.limit == undefined ? 10 : parseInt(request.query.limit);
+        const page = request.query.page == undefined ? 1 : parseInt(request.query.page);
+        const query = request.query.query == undefined ? "" : request.query.query;
+        const sort = request.query.sort == undefined ? 0 : parseInt(request.query.sort);
+
+        var products = await ProductManagerM.getProducts(limit, page, query, sort);
+                
         response.json({status: "success", data: products});
     }
     catch(error) {
@@ -36,8 +38,7 @@ router.post("/", async(request, response) => {
         const productInfo = request.body;
         const productCreated = await ProductManagerM.createProduct(productInfo)
 
-        const products = await ProductManagerM.getProducts();
-        socket_server.emit("update", products);
+        socket_server.emit("product-add", productCreated);
 
         response.json({status: "success", data: productCreated});
     }
@@ -53,8 +54,7 @@ router.put("/:pid", async(request, response) => {
 
         const productUpdated = await ProductManagerM.updateProduct(id, productInfo);
 
-        const products = await ProductManagerM.getProducts();
-        socket_server.emit("update", products);
+        socket_server.emit("product-update", productUpdated);
 
         response.json({status: "success", data: productUpdated});
     }
@@ -69,8 +69,7 @@ router.delete("/:pid", async(request, response) => {
 
         await ProductManagerM.deleteProduct(id);
 
-        const products = await ProductManagerM.getProducts();
-        socket_server.emit("update", products);
+        socket_server.emit("product-delete", id);
 
         response.json({status: "success", pid: id});
     }

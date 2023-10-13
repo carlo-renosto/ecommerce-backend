@@ -1,0 +1,24 @@
+
+<link rel="stylesheet" type="text/css" href="/css/products.css">
+
+{{#each docs}}
+    <div>
+    <div id="div-products">
+        <div id="div-container">
+            <div id="div-content">
+                <h3>{{this.title}}, ID {{this._id}}</h3>
+                <button class="button">+</button>
+                <p>Descripcion: {{this.description}}</p>
+                <p>Codigo: {{this.code}}</p>
+                <p class="hidden">Precio: ${{this.price}}</p>
+                <p class="hidden">Stock: {{this.stock}} unidades</p>
+                <p class="hidden">Categoria: {{this.category}}</p>
+                <p class="hidden">Imagen: {{this.thumbnail}}</p>
+            </div>
+        </div>
+    </div>
+        <button class="add-button">Añadir al carrito</button>
+    </div>
+{{/each}}
+
+<script src="/js/products.js"></script>

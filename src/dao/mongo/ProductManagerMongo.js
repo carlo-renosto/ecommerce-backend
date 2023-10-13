@@ -17,9 +17,25 @@ export class ProductManager {
         }
     }
 
-    async getProducts() {
+    async getProducts(limit=0, page=0, query="", sort=0) {
+        var products = [];
+
         try {
-            const products = await this.model.find().lean();
+            if(limit == 0 && page == 0 && query == "" && sort == 0) { 
+                products = await this.model.find().lean();
+            }
+            else {  
+                var options = {
+                    lean: true,
+                    limit: limit,
+                    page: page,
+                };
+                if(query != "") options = {...options, select: query};
+                if(sort != 0) options = {...options, sort: { price: sort }};
+
+                products = await this.model.paginate({}, options);
+            }
+            
             return products;
         }
         catch(error) {

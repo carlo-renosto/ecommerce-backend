@@ -32,8 +32,61 @@ router.post("/:cid/product/:pid", async(request, response) => {
         const cid = request.params.cid;
         const pid = request.params.pid;
 
-        const cart = await CartManagerM.updateCart(cid, pid);
-        response.json({status: "success", data: cart});
+        const cartUpdated = await CartManagerM.updateCartProduct(cid, pid);
+        response.json({status: "success", data: cartUpdated});
+    }
+    catch(error) {
+        response.json({status: "error", message: "Carrito no actualizado (error)"});
+    }
+});
+
+router.put("/:cid", async(request, response) => {
+    try {
+        const cid = request.params.cid;
+        const cartProducts = request.body;
+
+        const cartUpdated = await CartManagerM.updateCart(cid, cartProducts);
+        response.json({status: "success", data: cartUpdated});
+    }
+    catch(error) {
+        response.json({status: "error", message: "Carrito no actualizado (error)"});
+    }
+});
+
+
+router.put("/:cid/products/:pid", async(request, response) => {
+    try {
+        const cid = request.params.cid;
+        const pid = request.params.pid;
+        const quantity = request.body.quantity;
+
+        const cartUpdated = await CartManagerM.updateCartProductQuantity(cid, pid, quantity);
+        response.json({status: "success", data: cartUpdated});
+    }
+    catch(error) {
+        response.json({status: "error", message: "Carrito no actualizado (error)"});
+    }
+});
+
+router.delete("/:cid", async(request, response) => {
+    try {
+        const cid = request.params.cid;
+
+        const cartUpdated = await CartManagerM.deleteCart(cid);
+        response.json({status: "success", data: cartUpdated});
+    }
+    catch(error) {
+        response.json({status: "error", message: "Carrito no actualizado (error)"});
+    }
+});
+
+router.delete("/:cid/products/:pid", async(request, response) => {
+    try {
+        const cid = request.params.cid;
+        const pid = request.params.pid;
+
+        const cartUpdated = await CartManagerM.deleteCartProduct(cid, pid);
+        response.json({status: "success", data: cartUpdated});
     }
     catch(error) {
         response.json({status: "error", message: "Carrito no actualizado (error)"});

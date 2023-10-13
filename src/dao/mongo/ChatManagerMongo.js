@@ -8,7 +8,7 @@ export class ChatManagerMongo {
 
     async getMessages() {
         try {
-            const messages = await this.model.find();
+            const messages = await this.model.find().lean();
             return messages;
         }
         catch(error) {
