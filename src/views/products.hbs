@@ -1,7 +1,11 @@
 
 <link rel="stylesheet" type="text/css" href="/css/products.css">
 
-{{#each docs}}
+<h1>Productos</h1>
+
+<p>Bienvenido/a {{object.email}}, rol: {{object.role}}</p>
+
+{{#each object.products.docs}}
     <div>
     <div id="div-products">
         <div id="div-container">

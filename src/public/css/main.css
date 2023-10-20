@@ -1,15 +1,15 @@
 
-#buttons-form-0 {
+.a-0 {
     display: inline-block;
     margin-left: 20px;
 }
 
-#buttons-form-1 {
+.a-1 {
     display: inline-block;
     margin-left: 10px;
 }
 
-.buttons {
+a {
     background: none;
     border: none;
     padding: 0;
