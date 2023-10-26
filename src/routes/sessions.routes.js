@@ -1,13 +1,44 @@
 
 import { Router } from "express";
-import { usersModel } from "../dao/mongo/models/users.models.js";
+import  passport from "passport";
+import { config } from "../config/config.js";
 
 const router = Router();
 
-// Rutas de usuario
-
 router.get("/login", (request, response) => {
     response.render("login");
+});
+
+router.get("/signup", (request, response) => {
+    response.render("signup");
+});
+
+router.post("/user-login", passport.authenticate("loginLocalStrategy", {failureRedirect: "/api/sessions/fail-login"}), async(request, response) => {
+    response.redirect("/profile");
+});
+
+router.get("/user-login-github", passport.authenticate("loginGithubStrategy"));
+
+router.get(`${config.github.callback_url}-login`, passport.authenticate("loginGithubStrategy",  {failureRedirect: "/api/sessions/fail-login"}), async(request, response) => {
+    response.redirect("/profile");
+});
+
+router.get("/fail-login", (request, response) => {
+    response.render("login", {error: "Sesion no iniciada (error)"});
+});
+
+router.post("/user-signup", passport.authenticate("signupLocalStrategy", {failureRedirect: "/api/sessions/fail-signup"}), async(request, response) => {
+    response.render("login", {message: "Usuario registrado"});
+});
+
+router.get("/user-signup-github", passport.authenticate("signupGithubStrategy"));
+
+router.get(config.github.callback_url, passport.authenticate("signupGithubStrategy",  {failureRedirect: "/api/sessions/fail-signup"}), async(request, response) => {
+    response.redirect("/profile");
+});
+
+router.get("/fail-signup", (request, response) => {
+    response.render("signup", {error: "Usuario no registrado (error)"});
 });
 
 router.get("/logout", async(request, response)=>{
@@ -21,46 +52,7 @@ router.get("/logout", async(request, response)=>{
         });
     } 
     catch(error) {
-        response.render("signin", { error: "Usuario no registrado (error)"});
-    }
-});
-
-router.get("/signin", (request, response) => {
-    response.render("signin");
-});
-
-router.post("/user-login", async(request, response) => {
-    try {
-        const userInfo = request.body;
-        const user = await usersModel.findOne({email: userInfo.email});
-
-        if(!user) {
-            return response.render("login", { error: "Usuario no registrado" });
-        }
-        if(user.password !== userInfo.password) {
-            return response.render("login", { error: "Contraseña incorrecta" });
-        }
-
-        request.session.email = user.email;
-        request.session.role = user.role;
-        response.redirect("/products");
-    } 
-    catch(error) {
-        response.render("login", { error:"Sesion no iniciada (error)" });
-    }
-});
-
-router.post("/user-signin", async(request, response) => {
-    try {
-        const userInfo = request.body;
-
-        userInfo.role = userInfo.email == "adminCoder@coder.com" && userInfo.password == "adminCod3r123" ? "admin" : "user";
-        
-        await usersModel.create(userInfo);
-        response.render("login", { message: "Usuario registrado" });
-    } 
-    catch(error) {
-        response.render("signin", { error: "Usuario no registrado (error)" });
+        response.render("signup", { error: "Usuario no registrado (error)"});
     }
 });
 

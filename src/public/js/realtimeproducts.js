@@ -30,6 +30,8 @@ function displayProducts(products) {
         div_content.innerHTML = `
             <input class="pid" type="hidden" value=${product._id}>
             <h3>${product.title}, ID ${product._id}</h3>
+            <button class="button">+</button>
+            <hr>
             <p>Descripcion: ${product.description}</p>
             <p>Codigo: ${product.code}</p>
             <p>Precio: $${product.price}</p>
@@ -80,10 +82,10 @@ function updateProduct(product) {
                 <h3>${product.title}, ID ${product._id}</h3>
                 <p>Descripcion: ${product.description}</p>
                 <p>Codigo: ${product.code}</p>
-                <p>Precio: $${product.price}</p>
-                <p>Stock: ${product.stock} unidades</p>
-                <p>Categoria: ${product.category}</p>
-                <p>Imagen: ${product.thumbnail}</p>
+                <p class="hidden">Precio: $${product.price}</p>
+                <p class="hidden">Stock: ${product.stock} unidades</p>
+                <p class="hidden">Categoria: ${product.category}</p>
+                <p class="hidden">Imagen: ${product.thumbnail}</p>
             `;
 
             return;

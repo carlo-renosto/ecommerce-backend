@@ -7,7 +7,7 @@ import { socket_server } from "../app.js"
 const router = Router();
 
 const hasUser = (request, response, next) => {
-    if(!request.session.email) {
+    if(!request.user?.email) {
         response.redirect("/api/sessions/login")
     }
     else {
@@ -15,8 +15,8 @@ const hasUser = (request, response, next) => {
     }
 }
 
-router.get("/", async(request, response) => {
-    response.render("login");
+router.get("/",  hasUser, async(request, response) => {
+    response.render("home", {user: {email: request.user.email, role: request.user.role}});
 });
 
 router.get("/chat", hasUser, async(request, response) => {
@@ -44,8 +44,8 @@ router.get("/products", hasUser, async(request, response) => {
 
     const object = {
         products: products,
-        email: request.session.email,
-        role: request.session.role
+        email: request.user.email,
+        role: request.user.role
     }
 
     response.render("products", {object});
@@ -63,12 +63,7 @@ router.get("/realtimeproducts", hasUser, async(request, response) => {
 });
 
 router.get("/profile", hasUser, (request, response) => {
-    const user = {
-        email: request.session.email,
-        role: request.session.role
-    }
-    
-    response.render("perfil", {user});
+    response.render("perfil", {user: {email: request.user.email, role: request.user.role}});
 });
 
 export { router as viewsRouter };

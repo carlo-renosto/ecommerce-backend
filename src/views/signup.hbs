@@ -3,11 +3,13 @@
 
 <h1>Sign in</h1>
 
-<form method="post" action="user-signin">
+<form method="post" action="/api/sessions/user-signup">
     <input type="text" name="first_name" placeholder="Nombre">
     <input type="email" name="email" placeholder="Email">
     <input type="password" name="password" placeholder="Contraseña">
     <input type="submit" value="Sign in">
 </form>
+
+<a href="/api/sessions/user-signup-github"><button>Registrarse con Github</button></a>
 
 <p style="color: red">{{error}}</p>

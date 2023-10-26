@@ -6,8 +6,10 @@
     <input type="email" name="email" placeholder="Email">
     <input type="password" name="password" placeholder="Contraseña">
     <input type="submit" value="Log in">
-    <a id="signin" href="/api/sessions/signin">Registrarse</a>
 </form>
+
+<a href="/api/sessions/user-login-github"><button>Acceder con Github</button></a>
+<a id="signin" href="/api/sessions/signup">Registrarse</a>
 
 <p>{{message}}</p>
 <p style="color: red">{{error}}</p>

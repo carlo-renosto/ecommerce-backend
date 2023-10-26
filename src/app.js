@@ -1,17 +1,9 @@
 // npm run start
 
-// npm i express
-// npm i express express-handlebars
-// npm i socket.io
-// npm i mongoose
-// npm i cookie-parser
-// npm i express-session
-// npm i connect-mongo
-
 import express from "express";
 import { engine } from 'express-handlebars';
+import { config } from "./config/config.js";
 import session from "express-session";
-import cookieParser from "cookie-parser";
 import { Server } from "socket.io";
 import MongoStore from "connect-mongo";
 import { __dirname } from "./utils.js";
@@ -22,6 +14,8 @@ import { sessionsRouter } from "./routes/sessions.routes.js";
 import { ChatManagerM } from "./dao/index.js";
 import { connectDB } from "./config/dbconnection.js";
 import path from "path";
+import passport from "passport";
+import { initializePassport } from "./config/passport.config.js";
 
 const port = 8080;
 const app = express(); 
@@ -36,20 +30,24 @@ export const socket_server = new Server(http_server);
 app.use(express.static(path.join(__dirname, "/public")));
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
-app.use(session({
-    store: MongoStore.create({
-        ttl: 60, // Si el usuario interactua con la pagina, el Time to Live se reinicia
-        mongoUrl:"mongodb+srv://ecmrc:BL99hsn2ZtvV8I9b@ecommerce.rowzcke.mongodb.net/?retryWrites=true&w=majority"
-    }),
-    secret:"sessionpw",
-    resave:true,
-    saveUninitialized:true
-}));
-app.use(cookieParser("cookiespw"));
 
 app.engine('.hbs', engine({extname: '.hbs', runtimeOptions: {allowProtoMethodsByDefault: true, allowProtoPropertiesByDefault: true}}));
 app.set('view engine', '.hbs');
 app.set('views', path.join(__dirname, "/views"));
+
+app.use(session({
+    store: MongoStore.create({
+        ttl: 3000, // Si el usuario interactua con la pagina, el Time to Live se reinicia
+        mongoUrl: config.mongo.url
+    }),
+    secret: config.server.secret_session,
+    resave: true,
+    saveUninitialized: true
+}));
+
+initializePassport();
+app.use(passport.initialize());
+app.use(passport.session());
 
 var messages = [];
 
@@ -86,10 +84,3 @@ app.use("/api/products", productsRouter);
 app.use("/api/carts", cartsRouter);
 app.use("/api/sessions", sessionsRouter);
 app.use(viewsRouter);
-
-app.get("/set-session-user/:email/:role", (request, response) => {
-    request.session.email = request.params.email;
-    request.session.role = request.params.role;
-
-    response.json({message: "Session set"});
-});

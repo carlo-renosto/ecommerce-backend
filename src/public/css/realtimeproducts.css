@@ -14,3 +14,15 @@
     display: table-cell;
     padding: 10px;
 }
+
+h3, button {
+    display: inline-block;
+}
+
+.hidden {
+    display: none;
+}
+
+.visible {
+    display: block;
+}
