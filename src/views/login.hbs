@@ -2,11 +2,13 @@
 <link rel="stylesheet" type="text/css" href="/css/login_signin.css">
 
 <h1>Login</h1>
-<form method="post" action="/api/sessions/user-login">
+<form id="login-form" method="post" action="/api/sessions/user-login">
     <input type="email" name="email" placeholder="Email">
     <input type="password" name="password" placeholder="Contraseña">
     <input type="submit" value="Log in">
 </form>
+
+<script src="/js/login.js"></script>
 
 <a href="/api/sessions/user-login-github"><button>Acceder con Github</button></a>
 <a id="signin" href="/api/sessions/signup">Registrarse</a>

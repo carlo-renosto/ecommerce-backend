@@ -14,6 +14,7 @@ import { sessionsRouter } from "./routes/sessions.routes.js";
 import { ChatManagerM } from "./dao/index.js";
 import { connectDB } from "./config/dbconnection.js";
 import path from "path";
+import cookieParser from "cookie-parser";
 import passport from "passport";
 import { initializePassport } from "./config/passport.config.js";
 
@@ -27,6 +28,7 @@ const http_server = app.listen(port, () => console.log("Servidor en ejecucion (h
 // server socket
 export const socket_server = new Server(http_server);
 
+app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "/public")));
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));

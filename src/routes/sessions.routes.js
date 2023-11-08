@@ -1,7 +1,8 @@
 
 import { Router } from "express";
-import  passport from "passport";
+import { authenticate } from "../middlewares/auth.js";
 import { config } from "../config/config.js";
+import { generateToken } from "../utils.js";
 
 const router = Router();
 
@@ -13,47 +14,34 @@ router.get("/signup", (request, response) => {
     response.render("signup");
 });
 
-router.post("/user-login", passport.authenticate("loginLocalStrategy", {failureRedirect: "/api/sessions/fail-login"}), async(request, response) => {
-    response.redirect("/profile");
+router.post("/user-login", authenticate("loginLocalStrategy"), async(request, response) => {
+    const token = generateToken(request.user);
+
+    response.cookie("cookieToken", token, {httpOnly: true}).redirect("/profile");
 });
 
-router.get("/user-login-github", passport.authenticate("loginGithubStrategy"));
-
-router.get(`${config.github.callback_url}-login`, passport.authenticate("loginGithubStrategy",  {failureRedirect: "/api/sessions/fail-login"}), async(request, response) => {
-    response.redirect("/profile");
-});
-
-router.get("/fail-login", (request, response) => {
-    response.render("login", {error: "Sesion no iniciada (error)"});
-});
-
-router.post("/user-signup", passport.authenticate("signupLocalStrategy", {failureRedirect: "/api/sessions/fail-signup"}), async(request, response) => {
+router.post("/user-signup", authenticate("signupLocalStrategy"), async(request, response) => {
     response.render("login", {message: "Usuario registrado"});
 });
 
-router.get("/user-signup-github", passport.authenticate("signupGithubStrategy"));
+router.get("/user-login-github", authenticate("loginGithubStrategy"));
 
-router.get(config.github.callback_url, passport.authenticate("signupGithubStrategy",  {failureRedirect: "/api/sessions/fail-signup"}), async(request, response) => {
+router.get(`${config.github.callback_url}-login`, authenticate("loginGithubStrategy"), async(request, response) => {
     response.redirect("/profile");
 });
 
-router.get("/fail-signup", (request, response) => {
-    response.render("signup", {error: "Usuario no registrado (error)"});
+router.get("/user-signup-github", authenticate("signupGithubStrategy"));
+
+router.get(config.github.callback_url, authenticate("signupGithubStrategy"), async(request, response) => {
+    response.redirect("/profile");
 });
 
-router.get("/logout", async(request, response)=>{
-    try {
-        request.session.destroy(err => {
-            if(err) {
-                return response.render("login", { error: "Sesion no cerrada (error)"});
-            }
+router.get("/logout", (request, response) => { 
+    response.clearCookie("cookieToken").redirect("/api/sessions/login");
+});
 
-            response.redirect("/");
-        });
-    } 
-    catch(error) {
-        response.render("signup", { error: "Usuario no registrado (error)"});
-    }
+router.get("/current", authenticate("currentStrategy"), (request, response) => {
+    response.send({user: request.user});
 });
 
 export { router as sessionsRouter };

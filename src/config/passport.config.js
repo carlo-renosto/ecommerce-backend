@@ -2,12 +2,28 @@
 import passport from "passport";
 import localStrategy from "passport-local";
 import GithubStrategy from "passport-github2";
+import jwt from "passport-jwt"
 import { config } from "./config.js";
 import { usersModel } from "../dao/mongo/models/users.models.js";
 import { createPasswordHash, comparePasswordHash } from "../utils.js";
 
+const JWTStrategy = jwt.Strategy;
+const JWTExtract = jwt.ExtractJwt;
+
 export const initializePassport = () => {
-    // Nombre de la estrategia
+    passport.use("jwt-auth", new JWTStrategy({
+        jwtFromRequest: JWTExtract.fromExtractors([cookieExtractor]),
+        secretOrKey: config.jwt.private_key
+    },
+    async(JWTPayload, done) => {
+        try {
+           return done(null, JWTPayload); 
+        } 
+        catch(error) {
+            return done(error);
+        }
+    }));
+
     passport.use("signupLocalStrategy", new localStrategy(
         {
             passReqToCallback: true,
@@ -24,7 +40,9 @@ export const initializePassport = () => {
 
                 const userNew = {
                     first_name,
+                    last_name: request.body.last_name,
                     email: username,
+                    age: request.body.age,
                     password: createPasswordHash(password)
                 };
 
@@ -79,6 +97,7 @@ export const initializePassport = () => {
                 if(!comparePasswordHash(password, user)) {;
                     return done(null, false);
                 }
+
                 return done(null, user);
             } 
             catch (error) {
@@ -109,12 +128,26 @@ export const initializePassport = () => {
         }
     ));
 
-    passport.serializeUser((user, done) => {
-        done(null, user._id);
-    });
-
-    passport.deserializeUser(async(id, done) => {
-        const user = await usersModel.findById(id);
-        done(null, user);
-    });
+    passport.use("currentStrategy", new JWTStrategy({
+        jwtFromRequest: JWTExtract.fromExtractors([cookieExtractor]),
+        secretOrKey: config.jwt.private_key
+    },
+    async(JWTPayload, done) => {
+        try {
+            return done(null, JWTPayload); 
+        } 
+        catch(error) {
+            return done(error);
+        }
+    }));
 }
+
+const cookieExtractor = (request) => {
+    var token = null;
+
+    if(request && request.cookies) {
+        token = request.cookies["cookieToken"];
+    }
+    
+    return token;
+};

@@ -1,33 +1,25 @@
 
 import { Router } from "express";
+import { authenticate, authorize } from "../middlewares/auth.js";
 import { ProductManagerM } from "../dao/index.js";
 import { CartManagerM } from "../dao/index.js";
 import { socket_server } from "../app.js"
 
 const router = Router();
 
-const hasUser = (request, response, next) => {
-    if(!request.user?.email) {
-        response.redirect("/api/sessions/login")
-    }
-    else {
-        next();
-    }
-}
-
-router.get("/",  hasUser, async(request, response) => {
+router.get("/",  authenticate("jwt-auth"), authorize("user"), async(request, response) => {
     response.render("home", {user: {email: request.user.email, role: request.user.role}});
 });
 
-router.get("/chat", hasUser, async(request, response) => {
+router.get("/chat", authenticate("jwt-auth"), authorize("user"), async(request, response) => {
     response.render("chat");
 });
 
-router.get("/carts", hasUser, async(request, response) => {
+router.get("/carts", authenticate("jwt-auth"), authorize("user"), async(request, response) => {
     response.render("carts");
 });
 
-router.get("/carts/:cid", hasUser, async(request, response) => {
+router.get("/carts/:cid", authenticate("jwt-auth"), authorize("user"), async(request, response) => {
     try {
         const cid = request.query.cid || request.params.cid;
 
@@ -39,7 +31,7 @@ router.get("/carts/:cid", hasUser, async(request, response) => {
     }
 });
 
-router.get("/products", hasUser, async(request, response) => {
+router.get("/products", authenticate("jwt-auth"), authorize("user"), async(request, response) => {
     const products = await ProductManagerM.getProducts(10, 1);
 
     const object = {
@@ -51,7 +43,7 @@ router.get("/products", hasUser, async(request, response) => {
     response.render("products", {object});
 });
 
-router.get("/realtimeproducts", hasUser, async(request, response) => {
+router.get("/realtimeproducts", authenticate("jwt-auth"), authorize("user"), async(request, response) => {
     const products = await ProductManagerM.getProducts();
 
     response.render("realtimeproducts");
@@ -62,7 +54,7 @@ router.get("/realtimeproducts", hasUser, async(request, response) => {
     });
 });
 
-router.get("/profile", hasUser, (request, response) => {
+router.get("/profile", authenticate("jwt-auth"), authorize("user"), (request, response) => {
     response.render("perfil", {user: {email: request.user.email, role: request.user.role}});
 });
 
