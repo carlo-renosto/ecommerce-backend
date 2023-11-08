@@ -37,19 +37,8 @@ app.engine('.hbs', engine({extname: '.hbs', runtimeOptions: {allowProtoMethodsBy
 app.set('view engine', '.hbs');
 app.set('views', path.join(__dirname, "/views"));
 
-app.use(session({
-    store: MongoStore.create({
-        ttl: 3000, // Si el usuario interactua con la pagina, el Time to Live se reinicia
-        mongoUrl: config.mongo.url
-    }),
-    secret: config.server.secret_session,
-    resave: true,
-    saveUninitialized: true
-}));
-
 initializePassport();
 app.use(passport.initialize());
-app.use(passport.session());
 
 var messages = [];
 
