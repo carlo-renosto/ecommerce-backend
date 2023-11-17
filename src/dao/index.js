@@ -1,10 +1,10 @@
 
-import { ProductManagerMongo } from "./mongo/ProductManagerMongo.js";
-import { CartManagerMongo } from "./mongo/CartManagerMongo.js";
-import { ChatManagerMongo } from "./mongo/ChatManagerMongo.js";
+import { ProductManagerMongo } from "./managers/mongo/ProductManagerMongo.js";
+import { CartManagerMongo } from "./managers/mongo/CartManagerMongo.js";
+import { ChatManagerMongo } from "./managers/mongo/ChatManagerMongo.js";
 
 import { __dirname } from "../utils.js";
 
-export const ProductManagerM = new ProductManagerMongo();
-export const CartManagerM = new CartManagerMongo();
-export const ChatManagerM = new ChatManagerMongo();
+export const productManagerDao = new ProductManagerMongo();
+export const cartManagerDao = new CartManagerMongo();
+export const chatManagerDao = new ChatManagerMongo();

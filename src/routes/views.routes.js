@@ -1,9 +1,8 @@
 
 import { Router } from "express";
 import { authenticate, authorize } from "../middlewares/auth.js";
-import { ProductManagerM } from "../dao/index.js";
-import { CartManagerM } from "../dao/index.js";
-import { socket_server } from "../app.js"
+import { productsController } from "../controller/products.controller.js";
+import { cartsController } from "../controller/carts.controller.js";
 
 const router = Router();
 
@@ -19,39 +18,12 @@ router.get("/carts", authenticate("jwt-auth"), authorize("user"), async(request,
     response.render("carts");
 });
 
-router.get("/carts/:cid", authenticate("jwt-auth"), authorize("user"), async(request, response) => {
-    try {
-        const cid = request.query.cid || request.params.cid;
+router.get("/carts/:cid", authenticate("jwt-auth"), authorize("user"), cartsController.getCartView);
 
-        const cart = await CartManagerM.getCartById(cid);
-        response.render("carts", cart);
-    }
-    catch(error) {
-        response.render("carts");
-    }
-});
-
-router.get("/products", authenticate("jwt-auth"), authorize("user"), async(request, response) => {
-    const products = await ProductManagerM.getProducts(10, 1);
-
-    const object = {
-        products: products,
-        email: request.user.email,
-        role: request.user.role
-    }
-
-    response.render("products", {object});
-});
+router.get("/products", authenticate("jwt-auth"), authorize("user"), productsController.getProductsView);
 
 router.get("/realtimeproducts", authenticate("jwt-auth"), authorize("user"), async(request, response) => {
-    const products = await ProductManagerM.getProducts();
-
     response.render("realtimeproducts");
-
-    socket_server.on("connection", (socket) => {
-        console.log("Cliente conectado (ID " + socket.id + ")");
-        socket.emit("products", products);
-    });
 });
 
 router.get("/profile", authenticate("jwt-auth"), authorize("user"), (request, response) => {

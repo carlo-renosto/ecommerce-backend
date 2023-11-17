@@ -1,6 +1,8 @@
 
 const client_socket = io();
 
+client_socket.emit("request_messages");
+
 const message = document.getElementById("message-submit");
 const button = document.getElementById("button");
 

@@ -1,6 +1,8 @@
 
 const client_socket = io();
 
+client_socket.emit("request_products");
+
 client_socket.on("products", (products) => {
     displayProducts(products);
 });

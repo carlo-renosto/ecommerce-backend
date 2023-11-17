@@ -1,32 +1,32 @@
 // npm run start
 
 import express from "express";
+import cookieParser from "cookie-parser";
+import { connectDB } from "./config/dbconnection.js";
+
 import { engine } from 'express-handlebars';
-import { config } from "./config/config.js";
-import session from "express-session";
-import { Server } from "socket.io";
-import MongoStore from "connect-mongo";
 import { __dirname } from "./utils.js";
+import path from "path";
+
+import passport from "passport";
+import { initializePassport } from "./config/passport.config.js";
+
+import { socketServer } from "./sockets/socketserver.js";
+
 import { viewsRouter } from "./routes/views.routes.js";
 import { productsRouter } from "./routes/products.routes.js";
 import { cartsRouter } from "./routes/carts.routes.js";
 import { sessionsRouter } from "./routes/sessions.routes.js";
-import { ChatManagerM } from "./dao/index.js";
-import { connectDB } from "./config/dbconnection.js";
-import path from "path";
-import cookieParser from "cookie-parser";
-import passport from "passport";
-import { initializePassport } from "./config/passport.config.js";
 
-const port = 8080;
+const port = 8080; 
 const app = express(); 
 connectDB();
 
 // server http
 const http_server = app.listen(port, () => console.log("Servidor en ejecucion (https//localhost:8080)"));
 
-// server socket
-export const socket_server = new Server(http_server);
+// socket
+export const socket_server = socketServer(http_server);
 
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "/public")));
@@ -39,37 +39,6 @@ app.set('views', path.join(__dirname, "/views"));
 
 initializePassport();
 app.use(passport.initialize());
-
-var messages = [];
-
-socket_server.on("connection", async(socket) => {
-    console.log("Cliente conectado (ID " + socket.id + ")");
-    
-    try {
-        messages = await ChatManagerM.getMessages();
-        socket.emit("messages", messages);
-    }
-    catch(error) {
-        console.error("Error: " + error);
-    }   
-
-    socket.on("message_add", async(message) => {
-        try {
-            const messageInfo = {
-                user: "User",
-                message: message,
-            };
-    
-            await ChatManagerM.addMessage(messageInfo);
-            messages.push(messageInfo);
-
-            socket_server.emit("messages-update", messageInfo);
-        }
-        catch(error) {
-            console.error("Error: " + error);
-        }
-    });
-});
 
 app.use("/api/products", productsRouter);
 app.use("/api/carts", cartsRouter);

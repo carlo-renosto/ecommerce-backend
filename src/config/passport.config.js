@@ -4,7 +4,7 @@ import localStrategy from "passport-local";
 import GithubStrategy from "passport-github2";
 import jwt from "passport-jwt"
 import { config } from "./config.js";
-import { usersModel } from "../dao/mongo/models/users.models.js";
+import { usersModel } from "../dao/managers/mongo/models/users.models.js";
 import { createPasswordHash, comparePasswordHash } from "../utils.js";
 
 const JWTStrategy = jwt.Strategy;
