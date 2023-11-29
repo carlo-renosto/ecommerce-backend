@@ -1,13 +1,13 @@
 
-import { cartManagerDao } from "../dao/index.js";
+import { cartManagerDao } from "../../dao/index.js";
 
-export class cartsService {
+export class cartsRepository {
     constructor() {
         this.dao = cartManagerDao;
     }
 
-    async createCart() {
-        const cart = await this.dao.createCart();
+    async createCart(uid) {
+        const cart = await this.dao.createCart(uid);
         return cart;
     }
 
@@ -39,5 +39,9 @@ export class cartsService {
     async deleteCartProduct(cid, pid) {
         const cart = await this.dao.deleteCartProduct(cid, pid);
         return cart;
+    }
+
+    async purchaseCart(cid) {
+        await this.dao.purchaseCart(cid);
     }
 }

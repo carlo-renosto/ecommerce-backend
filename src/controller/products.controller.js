@@ -1,8 +1,6 @@
 
-import { productsService } from "../services/products.service.js";
+import { productsService } from "../repository/index.js";
 import { socket_server } from "../app.js";
-
-const service = new productsService();
 
 export class productsController {
     static getProducts = async(request, response) => {
@@ -12,7 +10,7 @@ export class productsController {
             const query = request.query.query == undefined ? "" : request.query.query;
             const sort = request.query.sort == undefined ? 0 : parseInt(request.query.sort);
     
-            var products = await service.getProducts(limit, page, query, sort);
+            var products = await productsService.getProducts(limit, page, query, sort);
                     
             response.json({status: "success", data: products});
         }
@@ -23,7 +21,7 @@ export class productsController {
 
     static getProductsView = async(request, response) => {
         try {
-            const products = await service.getProducts(10, 1);
+            const products = await productsService.getProducts(10, 1);
 
             const object = {
                 products: products,
@@ -42,7 +40,7 @@ export class productsController {
         try {
             const id = request.params.pid;
     
-            const product = await service.getProductById(id);
+            const product = await productsService.getProductById(id);
             response.json({status: "success", data: product});
         }
         catch(error) {
@@ -53,7 +51,7 @@ export class productsController {
     static createProduct = async(request, response) => {
         try {
             const productInfo = request.body;
-            const productCreated = await service.createProduct(productInfo)
+            const productCreated = await productsService.createProduct(productInfo)
     
             socket_products.emit("product-add", productCreated);
     
@@ -69,7 +67,7 @@ export class productsController {
             const id = request.params.pid;
             const productInfo = request.body;
     
-            const productUpdated = await service.updateProduct(id, productInfo);
+            const productUpdated = await productsService.updateProduct(id, productInfo);
     
             socket_server.emit("product-update", productUpdated);
     

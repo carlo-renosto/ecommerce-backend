@@ -1,8 +1,11 @@
 
 import { Router } from "express";
-import { authenticate } from "../middlewares/auth.js";
 import { config } from "../config/config.js";
+import { authenticate } from "../middlewares/auth.js";
+
 import { generateToken } from "../utils.js";
+
+import { usersController } from "../controller/users.controller.js";
 
 const router = Router();
 
@@ -40,8 +43,6 @@ router.get("/logout", (request, response) => {
     response.clearCookie("cookieToken").redirect("/api/sessions/login");
 });
 
-router.get("/current", authenticate("currentStrategy"), (request, response) => {
-    response.send({user: request.user});
-});
+router.get("/current", authenticate("currentStrategy"), usersController.getUserCurrent);
 
 export { router as sessionsRouter };

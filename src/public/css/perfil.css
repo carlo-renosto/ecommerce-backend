@@ -1,0 +1,16 @@
+
+#div-user {
+    display: inline-block;
+}
+
+#div-container {
+    display: table;
+    margin-bottom: 10px;
+    overflow: hidden;
+    border: 1px solid #ccc;
+}
+
+#div-content {
+    display: table-cell;
+    padding: 10px;
+}

@@ -1,5 +1,5 @@
 
-import { productsModel } from "./models/products.models.js";
+import { productsModel } from "../../models/products.models.js";
 
 export class ProductManager {
     constructor() {
@@ -47,7 +47,7 @@ export class ProductManager {
     async getProductById(id) {
         try {
             const product = await this.model.findById(id);
-            if(product == null) throw new Error("ID inexistente");
+            if(product == null) throw new Error("`PID inexistente");
 
             return product;
         }

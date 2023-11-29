@@ -1,7 +1,7 @@
 
-import { productManagerDao } from "../dao/index.js";
+import { productManagerDao } from "../../dao/index.js";
 
-export class productsService {
+export class productsRepository {
     constructor() {
         this.dao = productManagerDao;
     }

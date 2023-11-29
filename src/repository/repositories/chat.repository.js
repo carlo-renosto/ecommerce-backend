@@ -1,7 +1,8 @@
 
-import { chatManagerDao } from "../dao/index.js";
 
-export class chatService {
+import { chatManagerDao } from "../../dao/index.js";
+
+export class chatRepository {
     constructor() {
         this.dao = chatManagerDao;
     }

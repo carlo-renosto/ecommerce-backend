@@ -26,7 +26,7 @@ connectDB();
 const http_server = app.listen(port, () => console.log("Servidor en ejecucion (https//localhost:8080)"));
 
 // socket
-export const socket_server = socketServer(http_server);
+export const socket_server = new socketServer(http_server);
 
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "/public")));

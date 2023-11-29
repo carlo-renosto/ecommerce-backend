@@ -1,17 +1,22 @@
 
-import { cartsModel } from "./models/carts.models.js";
+import { cartsModel } from "../../models/carts.models.js";
 import { ProductManager } from "./ProductManagerMongo.js"
+import { UserManager } from "./UserManagerMongo.js";
 
 const ProductManagerM = new ProductManager();
+const UserManagerM = new UserManager();
+
 
 export class CartManager {
     constructor() { 
         this.model = cartsModel;
     }
 
-    async createCart() {
+    async createCart(uid) {
         try {
-            const cart = await this.model.create({products: []});
+            await UserManagerM.getUserById(uid);
+            
+            const cart = await this.model.create({_uid: uid, products: []});
 
             return cart;
         }
@@ -24,7 +29,23 @@ export class CartManager {
     async getCartById(id) {
         try {
             const cart = await this.model.findById(id).populate({path: "products._id", model: "products"});
-            if(cart == null) throw new Error("ID inexistente (carrito)");
+            if(cart == null) throw new Error("CID inexistente");
+
+            const populatedCart = cart.toObject();
+            populatedCart.products = populatedCart.products.map(product => ({product: product._id, quantity: product.quantity}));
+
+            return populatedCart;
+        }
+        catch(error) {
+            console.log("Error: " + error.message);
+            throw error;
+        }
+    }
+
+    async getCartByUid(uid) {
+        try {
+            const cart = await this.model.findOne({_uid: uid}).populate({path: "products._id", model: "products"});
+            if(cart == null) throw new Error("UID inexistente");
 
             const populatedCart = cart.toObject();
             populatedCart.products = populatedCart.products.map(product => ({product: product._id, quantity: product.quantity}));
@@ -156,6 +177,36 @@ export class CartManager {
             throw error;
         }
     }
+
+    async purchaseCart(cid) {
+        try {
+            const cart = await this.model.findById(cid).populate({ path: "products._id", model: "products" });
+            if (cart == null) throw new Error("CID inexistente");
+    
+            const updatedProducts = await Promise.all(cart.products.map(async (product) => {
+                var productAux = await ProductManagerM.getProductById(product._id);
+    
+                if(productAux && productAux.stock >= product.quantity) {
+                    productAux.stock -= product.quantity;
+    
+                    await ProductManagerM.updateProduct(productAux.id, productAux);
+    
+                    return null; 
+                } 
+                else {
+                    return product; 
+                }
+            }));
+    
+            cart.products = updatedProducts.filter(product => product !== null);
+    
+            await this.model.findByIdAndUpdate(cart._id, cart);
+        } catch (error) {
+            console.log("Error: " + error.message);
+            throw error;
+        }
+    }
+    
 }
 
 export { CartManager as CartManagerMongo };
