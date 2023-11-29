@@ -42,6 +42,7 @@ export class cartsRepository {
     }
 
     async purchaseCart(cid) {
-        await this.dao.purchaseCart(cid);
+        const ticket = await this.dao.purchaseCart(cid);
+        return ticket;
     }
 }

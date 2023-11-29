@@ -2,9 +2,11 @@
 import { cartsModel } from "../../models/carts.models.js";
 import { ProductManager } from "./ProductManagerMongo.js"
 import { UserManager } from "./UserManagerMongo.js";
+import { TicketManager } from "./TicketManagerMongo.js";
 
 const ProductManagerM = new ProductManager();
 const UserManagerM = new UserManager();
+const TicketManagerM = new TicketManager();
 
 
 export class CartManager {
@@ -180,9 +182,11 @@ export class CartManager {
 
     async purchaseCart(cid) {
         try {
-            const cart = await this.model.findById(cid).populate({ path: "products._id", model: "products" });
+            const cart = await this.model.findById(cid);
             if (cart == null) throw new Error("CID inexistente");
     
+            var price = 0;
+
             const updatedProducts = await Promise.all(cart.products.map(async (product) => {
                 var productAux = await ProductManagerM.getProductById(product._id);
     
@@ -190,18 +194,26 @@ export class CartManager {
                     productAux.stock -= product.quantity;
     
                     await ProductManagerM.updateProduct(productAux.id, productAux);
-    
+                    
+                    const amount = productAux.price * product.quantity;
+                    price += amount;
+
                     return null; 
                 } 
                 else {
                     return product; 
                 }
             }));
-    
-            cart.products = updatedProducts.filter(product => product !== null);
-    
+
+            cart.products = updatedProducts.filter(product => product != null);
             await this.model.findByIdAndUpdate(cart._id, cart);
-        } catch (error) {
+
+            const user = await UserManagerM.getUserById(cart._uid);
+            const ticket = TicketManagerM.createTicket(price, user.email);
+
+            return ticket;
+        } 
+        catch (error) {
             console.log("Error: " + error.message);
             throw error;
         }
