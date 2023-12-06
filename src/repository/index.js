@@ -1,8 +1,8 @@
 
-import { cartsRepository } from "./repositories/carts.repository.js";
-import { productsRepository } from "./repositories/products.repository.js";
+import { cartsRepository } from "./repositories/cart.repository.js";
+import { productsRepository } from "./repositories/product.repository.js";
 import { chatRepository } from "./repositories/chat.repository.js";
-import { usersRepository } from "./repositories/users.repository.js";
+import { usersRepository } from "./repositories/user.repository.js";
 
 export const cartsService = new cartsRepository();
 export const productsService = new productsRepository();

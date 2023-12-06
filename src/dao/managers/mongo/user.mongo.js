@@ -1,7 +1,7 @@
 
 import { usersModel } from "../../models/users.models.js";
 
-export class UserManager {
+export class userManagerMongo {
     constructor() {
         this.model = usersModel;
     }
@@ -12,8 +12,7 @@ export class UserManager {
             return user;
         }
         catch(error) {
-            console.log("Error: " + error.message);
-            throw error;
+            console.log("Error (user.mongo.js): " + error.message);
         }
     }
 
@@ -23,8 +22,7 @@ export class UserManager {
             return users;
         }
         catch(error) {
-            console.log("Error: " + error.message);
-            throw error; 
+            console.log("Error (user.mongo.js): " + error.message);
         }
     }
 
@@ -36,8 +34,7 @@ export class UserManager {
             return user;
         }
         catch(error) {
-            console.log("Error: " + error.message);
-            throw error; 
+            console.log("Error (user.mongo.js): " + error.message);
         }
     }
 
@@ -49,8 +46,7 @@ export class UserManager {
             return user;
         }
         catch(error) {
-            console.log("Error: " + error.message);
-            throw error; 
+            console.log("Erro (user.mongo.js): " + error.message);
         }
     }
 }

@@ -4,10 +4,22 @@
 <h1>Chat</h1>
 
 <div id="centered-div">
-    <ul id="ul-messages"></ul>
-    <input id="message-submit" type="text" name="message"> 
-    <input id="button" type="button" value="Enviar">
+    <ul id="ul-messages">
+        {{#each object.users}}
+            <li>({{this.name}}): {{this.message}}</li>
+        {{/each}}
+    </ul>
+    {{#if object.role}}
+        <form method="post" action="/api/chats/message-add">
+            <input id="message-submit" type="text" name="message"> 
+            <input id="button" type="submit" value="Enviar">
+        </form>
+    {{else}}
+        <input class="hidden" id="message-submit" type="text" name="message"> 
+        <input class="hidden" id="submit" type="button" value="Enviar">
+    {{/if}}
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/handlebars@4.7.7/dist/handlebars.min.js"></script>
 <script src="/socket.io/socket.io.js"></script>
 <script src="/js/chat.js"></script>

@@ -1,14 +1,27 @@
 
-<link rel="stylesheet" type="text/css" href="/css/realtimeproducts.css">
+<link rel="stylesheet" type="text/css" href="/css/products.css">
 
 <h1>Productos (Real Time)</h1>
 
 <div id="div-products">
-    <div class="div-container">
-        <div class="div-content"></div>
-    </div>
+    {{#each products}}
+        <div id="div-container">
+            <div id="div-content">
+                <h3>{{this.title}}</h3>
+                <button class="button">+</button>
+                <hr>
+                <p>Descripcion: {{this.description}}</p>
+                <p>Codigo: {{this.code}}</p>
+                <p class="hidden">Precio: ${{this.price}}</p>
+                <p class="hidden">Stock: {{this.stock}} unidades</p>
+                <p class="hidden">Categoria: {{this.category}}</p>
+                <p class="hidden">Imagen: {{this.thumbnail}}</p>
+            </div>
+        </div>
+    {{/each}}
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/handlebars@4.7.7/dist/handlebars.min.js"></script>
 <script src="/socket.io/socket.io.js"></script>
-<script src="/js/realtimeproducts.js"></script>
 <script src="/js/products.js"></script>
+<script src="/js/realtimeproducts.js"></script>

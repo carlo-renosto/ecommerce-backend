@@ -3,14 +3,12 @@
 
 <h1>Productos</h1>
 
-<p>Bienvenido/a {{object.email}}, rol: {{object.role}}</p>
-
 {{#each object.products.docs}}
     <div>
     <div id="div-products">
         <div id="div-container">
             <div id="div-content">
-                <h3>{{this.title}}, ID {{this._id}}</h3>
+                <h3>{{this.title}}</h3>
                 <button class="button">+</button>
                 <hr>
                 <p>Descripcion: {{this.description}}</p>

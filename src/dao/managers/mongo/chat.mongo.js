@@ -1,7 +1,7 @@
 
 import { chatModel } from "../../models/chat.model.js";
 
-export class ChatManagerMongo {
+export class chatManagerMongo {
     constructor() {
         this.model = chatModel;
     }
@@ -12,8 +12,7 @@ export class ChatManagerMongo {
             return messages;
         }
         catch(error) {
-            console.log("Error: " + error.message);
-            throw error;
+            console.log("Error (chat.mongo.js): " + error.message);
         }
     }
 
@@ -23,8 +22,7 @@ export class ChatManagerMongo {
             return message;
         }
         catch(error) {
-            console.log("Error: " + error.message);
-            throw error;
+            console.log("Error (chat.mongo.js): " + error.message);
         }
     }
 }

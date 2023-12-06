@@ -19,7 +19,7 @@ export const comparePasswordHash = (password, user) => {
 export const PRIVATE_KEY = config.jwt.private_key;
 
 export const generateToken = (user) => {
-    const token = jwt.sign({name: user.name, email: user.email, role: user.role}, PRIVATE_KEY, {expiresIn: "24h"});
+    const token = jwt.sign({name: user.first_name + " " + user.last_name, email: user.email, role: user.role}, PRIVATE_KEY, {expiresIn: "24h"});
     
     return token;
 }

@@ -3,106 +3,52 @@ const client_socket = io();
 
 client_socket.emit("request_products");
 
+const template = Handlebars.compile(`
+    {{#each products}}
+        <div id="div-container">
+            <div id="div-content">
+                <h3>{{this.title}}</h3>
+                <button class="button">+</button>
+                <hr>
+                <p>Descripcion: {{this.description}}</p>
+                <p>Codigo: {{this.code}}</p>
+                <p class="hidden">Precio: $ {{this.price}}</p>
+                <p class="hidden">Stock: {{this.stock}} unidades</p>
+                <p class="hidden">Categoria: {{this.category}}</p>
+                <p class="hidden">Imagen: {{this.thumbnail}}</p>
+            </div>
+        </div>
+    {{/each}}
+`);
+
 client_socket.on("products", (products) => {
-    displayProducts(products);
+    const container = document.getElementById('div-products');
+    container.innerHTML = template({ products });
 });
 
 client_socket.on("product-add", (product) => {
-    addProduct(product);
+    const container = document.getElementById('div-products');
+    container.innerHTML += template({ products: [product] });
 });
 
 client_socket.on("product-update", (product) => {
-    updateProduct(product);
+    const container = document.getElementById('div-products');
+    const updatedHTML = template({ products: [product] });
+    const updatedProduct = container.querySelector(`[data-product-id="${product._id}"]`);
+
+    if(updatedProduct) {
+        updatedProduct.innerHTML = updatedHTML;
+    } 
+    else {
+        container.innerHTML += updatedHTML;
+    }
 });
 
 client_socket.on("product-delete", (pid) => {
-    deleteProduct(pid);
+    const container = document.getElementById('div-products');
+    const deletedProduct = container.querySelector(`[data-product-id="${pid}"]`);
+
+    if(deletedProduct) {
+        deletedProduct.remove();
+    }
 });
-
-function displayProducts(products) {
-    const container = document.getElementById('div-products');
-    container.innerHTML = "";
-
-    products.forEach(product => {
-        const div_container = document.createElement("div");
-        var div_content = document.createElement("div");
-
-        if(product.thumbnail == undefined) product.thumbnail = "";
-
-        div_content.innerHTML = `
-            <input class="pid" type="hidden" value=${product._id}>
-            <h3>${product.title}, ID ${product._id}</h3>
-            <button class="button">+</button>
-            <hr>
-            <p>Descripcion: ${product.description}</p>
-            <p>Codigo: ${product.code}</p>
-            <p>Precio: $${product.price}</p>
-            <p>Stock: ${product.stock} unidades</p>
-            <p>Categoria: ${product.category}</p>
-            <p>Imagen: ${product.thumbnail}</p>
-        `;
-
-        div_container.classList.add("div-container");
-        div_content.classList.add("div-content");
-
-        container.append(div_container);
-        div_container.append(div_content);
-    });
-}
-
-function addProduct(product) {
-    const container = document.getElementById('div-products');
-    const div_container = document.createElement("div");
-    var div_content = document.createElement("div");
-
-    div_content.innerHTML = `
-        <input class="pid" type="hidden" value=${product._id}>
-        <h3>${product.title}, ID ${product._id}</h3>
-        <p>Descripcion: ${product.description}</p>
-        <p>Codigo: ${product.code}</p>
-        <p>Precio: $${product.price}</p>
-        <p>Stock: ${product.stock} unidades</p>
-        <p>Categoria: ${product.category}</p>
-        <p>Imagen: ${product.thumbnail}</p>
-    `;
-    
-    div_container.classList.add("div-container");
-    div_content.classList.add("div-content");
-
-    container.append(div_container);
-    div_container.append(div_content);
-}
-
-function updateProduct(product) {
-    var products = document.getElementsByClassName("div-content");
-    var inputs = document.getElementsByClassName("pid");
-
-    for(var i=0;i<inputs.length;i++) {
-        if(product._id == inputs[i].value) {
-            products[i].innerHTML = `
-                <input class="pid" type="hidden" value=${product._id}>
-                <h3>${product.title}, ID ${product._id}</h3>
-                <p>Descripcion: ${product.description}</p>
-                <p>Codigo: ${product.code}</p>
-                <p class="hidden">Precio: $${product.price}</p>
-                <p class="hidden">Stock: ${product.stock} unidades</p>
-                <p class="hidden">Categoria: ${product.category}</p>
-                <p class="hidden">Imagen: ${product.thumbnail}</p>
-            `;
-
-            return;
-        }
-    }
-}
-
-function deleteProduct(pid) {
-    var products = document.getElementsByClassName("div-container");
-    var inputs = document.getElementsByClassName("pid");
-
-    for(var i=0;i<inputs.length;i++) {
-        if(pid == inputs[i].value) {
-            products[i].innerHTML = "";
-            return;
-        }
-    }
-}

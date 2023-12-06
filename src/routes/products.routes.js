@@ -13,6 +13,6 @@ router.post("/", authorize("admin"), productsController.createProduct);
 
 router.put("/:pid", authorize("admin"), productsController.updateProduct);
 
-router.delete("/:pid", authorize("admin"), productsController.deleteProduct);
+router.delete("/:pid", productsController.deleteProduct);
 
 export { router as productsRouter };

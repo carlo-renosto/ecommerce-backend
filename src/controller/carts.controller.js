@@ -55,22 +55,11 @@ export class cartsController {
         try {
             const cid = request.params.cid;
             const pid = request.params.pid;
-    
-            const cartUpdated = await cartsService.updateCartProduct(cid, pid);
-            response.json({status: "success", data: cartUpdated});
-        }
-        catch(error) {
-            response.json({status: "error", message: "Carrito no actualizado (error)"});
-        }
-    }
+            var quantity = request.body.quantity;
 
-    static addCartProductQuantity = async(request, response) => {
-        try {
-            const cid = request.params.cid;
-            const pid = request.params.pid;
-            const quantity = request.body.quantity;
-    
-            const cartUpdated = await cartsService.updateCartProductQuantity(cid, pid, quantity);
+            quantity = quantity == null ? 1 : parseInt(quantity);
+                
+            const cartUpdated = await cartsService.updateCartProduct(cid, pid, quantity);
             response.json({status: "success", data: cartUpdated});
         }
         catch(error) {

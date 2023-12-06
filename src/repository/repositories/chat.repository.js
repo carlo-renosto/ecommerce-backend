@@ -8,12 +8,22 @@ export class chatRepository {
     }
 
     async getMessages() {
-        const messages = await this.dao.getMessages();
-        return messages;
+        try {
+            const messages = await this.dao.getMessages();
+            return messages;
+        }
+        catch(error) {
+            console.log("Error (chat.repository.js): " + error.message);
+        }
     }
 
     async addMessage(messageInfo) {
-        const message = await this.dao.addMessage(messageInfo);
-        return message;
+        try {
+            const message = await this.dao.addMessage(messageInfo);
+            return message;
+        }
+        catch(error) {
+            console.log("Error (chat.repository.js): " + error.message);
+        }
     }
 }

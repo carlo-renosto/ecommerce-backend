@@ -1,7 +1,7 @@
 
 import { productsModel } from "../../models/products.models.js";
 
-export class ProductManager {
+export class productManagerMongo {
     constructor() {
         this.model = productsModel;
     }
@@ -12,8 +12,7 @@ export class ProductManager {
             return product;
         }
         catch(error) {
-            console.log("Error: " + error.message);
-            throw error;
+            console.log("Error (product.mongo.js): " + error.message);
         }
     }
 
@@ -39,21 +38,19 @@ export class ProductManager {
             return products;
         }
         catch(error) {
-            console.log("Error: " + error.message);
-            throw error;
+            console.log("Error (product.mongo.js): " + error.message);
         }
     }
 
     async getProductById(id) {
         try {
             const product = await this.model.findById(id);
-            if(product == null) throw new Error("`PID inexistente");
+            if(product == null) throw new Error("PID inexistente");
 
             return product;
         }
         catch(error) {
-            console.log("Error: " + error.message);
-            throw error;
+            console.log("Error (product.mongo.js): " + error.message);
         }
     }
 
@@ -62,26 +59,22 @@ export class ProductManager {
             await this.model.findByIdAndUpdate(id, productInfo);
 
             const product = await this.model.findById(id);
-            if(product == null) throw new Error("ID inexistente");
+            if(product == null) throw new Error("PID inexistente");
 
             return product;
         }
         catch {
-            console.log("Error: " + error.message);
-            throw error; 
+            console.log("Error (product.mongo.js): " + error.message); 
         }
     }
 
     async deleteProduct(id) {
         try {
             const product = await this.model.findByIdAndDelete(id);
-            if(product == null) throw new Error("ID inexistente");
+            if(product == null) throw new Error("PID inexistente");
         }
         catch {
-            console.log("Error: " + error.message);
-            throw error; 
+            console.log("Error (product.mongo.js): " + error.message); 
         }
     }
 }
-
-export { ProductManager as ProductManagerMongo };

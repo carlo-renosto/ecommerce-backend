@@ -15,8 +15,14 @@ const ticketSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     },
-    amount: {type: Number},
-    purchaser: {type: String}
+    amount: {
+        type: Number,
+        required: true
+    },
+    purchaser: {
+        type: String,
+        required: true
+    }
 });
 
 const ticketsModel = mongoose.model(ticketsCollection, ticketSchema);

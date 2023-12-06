@@ -8,29 +8,19 @@ import { productsService } from "../repository/index.js";
 export class socketServer {
     constructor(httpServer) {
         this.socket = new Server(httpServer);
-        this.messages = [];
         this.products = [];
 
         this.socket.on("connection", async(socket) => {
             console.log("Socket abierto (ID " + socket.id + ")");
             
-            socket.on("request_messages", async() => {
-                await this.getMessages(socket);
-            });
-    
             socket.on("request_products", async() => {
                 await this.getProducts(socket);
-            });
-    
-            socket.on("message_add", async(message) => {
-                await this.addMessage(message);
             });
         });
     }
 
-    async getMessages(localSocket) {
-        this.messages = await chatService.getMessages();
-        localSocket.emit("messages", this.messages);
+    sendMessages(object) {
+        this.socket.emit("messages", object);                
     }
 
     async addMessage(message) {
