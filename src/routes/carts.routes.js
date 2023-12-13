@@ -1,21 +1,22 @@
 
 import { Router } from "express";
 import { cartsController } from "../controller/carts.controller.js";
+import { invalidParamErrorHandler, invalidBodyErrorHandler } from "../middlewares/error.js";
 
 const router = Router();
 
-router.get("/:cid", cartsController.getCart);
+router.get("/:cid", invalidParamErrorHandler, cartsController.getCart);
 
-router.post("/", cartsController.createCart);
+router.post("/", invalidParamErrorHandler, invalidBodyErrorHandler, cartsController.createCart);
 
-router.put("/:cid", cartsController.updateCart);
+router.put("/:cid", invalidParamErrorHandler, invalidBodyErrorHandler, cartsController.updateCart);
 
-router.post("/:cid/product/:pid", cartsController.addCartProduct);
+router.post("/:cid/product/:pid", invalidParamErrorHandler, invalidBodyErrorHandler, cartsController.addCartProduct);
 
-router.delete("/:cid", cartsController.deleteCart);
+router.delete("/:cid", invalidParamErrorHandler, cartsController.deleteCart);
 
-router.delete("/:cid/products/:pid", cartsController.deleteCartProduct);
+router.delete("/:cid/products/:pid", invalidParamErrorHandler, cartsController.deleteCartProduct);
 
-router.put("/:cid/purchase", cartsController.purchaseCart);
+router.put("/:cid/purchase", invalidParamErrorHandler, cartsController.purchaseCart);
 
 export { router as cartsRouter };

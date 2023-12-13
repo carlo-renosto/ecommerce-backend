@@ -1,10 +1,13 @@
 
-import path from 'path';
-import { fileURLToPath } from 'url';
-import bcrypt from "bcrypt";
 import { config } from './config/config.js';
 
 import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
+
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+import { faker } from "@faker-js/faker";
 
 export const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -37,4 +40,19 @@ export const validateToken = (request, response, next)=>{
         request.user = payload;
         next();
     });
+};
+
+const { database, string, image, commerce } = faker;
+
+export const mockProduct = () => {
+    return {
+        id: database.mongodbObjectId(),
+        title: commerce.product(),
+        description: commerce.productDescription(),
+        code: string.alphanumeric(5),
+        price: parseFloat(commerce.price()),
+        stock: parseInt(string.numeric(3)),
+        category: commerce.productAdjective(),
+        thumbnail: image.url()
+    } 
 };

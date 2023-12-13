@@ -7,6 +7,8 @@ export class cartsController {
             const id = request.params.cid;
     
             const cart = await cartsService.getCartById(id);
+            if(cart == -1) throw new Error();
+
             response.json({status: "success", data: cart});
         }
         catch(error) {
@@ -19,6 +21,8 @@ export class cartsController {
             const cid = request.query.cid || request.params.cid;
     
             const cart = await cartsService.getCartById(cid);
+            if(cart == -1) throw new Error();
+
             response.render("carts", cart);
         }
         catch(error) {
@@ -44,6 +48,8 @@ export class cartsController {
             const cartProducts = request.body;
     
             const cartUpdated = await cartsService.updateCart(cid, cartProducts);
+            if(cart == -1) throw new Error();
+
             response.json({status: "success", data: cartUpdated});
         }
         catch(error) {
@@ -60,6 +66,8 @@ export class cartsController {
             quantity = quantity == null ? 1 : parseInt(quantity);
                 
             const cartUpdated = await cartsService.updateCartProduct(cid, pid, quantity);
+            if(cart == -1) throw new Error();
+
             response.json({status: "success", data: cartUpdated});
         }
         catch(error) {
@@ -72,6 +80,8 @@ export class cartsController {
             const cid = request.params.cid;
     
             const cartUpdated = await cartsService.deleteCart(cid);
+            if(cart == -1) throw new Error();
+
             response.json({status: "success", data: cartUpdated});
         }
         catch(error) {
@@ -85,6 +95,8 @@ export class cartsController {
             const pid = request.params.pid;
     
             const cartUpdated = await cartsService.deleteCartProduct(cid, pid);
+            if(cart == -1) throw new Error();
+
             response.json({status: "success", data: cartUpdated});
         }
         catch(error) {
@@ -97,6 +109,8 @@ export class cartsController {
             const cid = request.params.cid;
     
             const ticket = await cartsService.purchaseCart(cid);
+            if(cart == -1) throw new Error();
+
             response.json({status: "success", ticket: ticket});
         }
         catch(error) {

@@ -5,7 +5,7 @@ export class customError {
         error.name = name;
         error.code = errorCode;
         
-        console.log("customError", error);
+        console.log(error);
         throw error;
     };
 };

@@ -3,11 +3,11 @@ import { Router } from "express";
 import { authenticate } from "../middlewares/auth.js";
 import { productsController } from "../controller/products.controller.js";
 import { cartsController } from "../controller/carts.controller.js";
-import { mockProduct } from "../helpers/mock.js";
+import { mockProduct } from "../utils.js";
 
 const router = Router();
 
-router.get("/",  authenticate("jwt-auth"), (request, response) => {
+router.get("/", authenticate("jwt-auth"), (request, response) => {
     response.render("home", {user: {email: request.user.email, role: request.user.role}});
 });
 

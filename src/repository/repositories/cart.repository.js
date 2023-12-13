@@ -38,6 +38,8 @@ export class cartsRepository {
     async updateCart(cid, cartProducts) {
         try {
             var cart = await this.dao.getCartById(cid, false);
+            if(cart == -1) return -1;
+            
             cart.products = [...cart.products, ...cartProducts];
 
             const cartUpdated = await this.dao.updateCart(cid, cart);
@@ -51,6 +53,8 @@ export class cartsRepository {
     async updateCartProduct(cid, pid, quantity) {
         try {
             var cart = await this.dao.getCartById(cid, false);
+            if(cart == -1) return -1;
+
             await this.daoP.getProductById(pid);
    
             var index = cart.products.findIndex(prod => prod._id == pid);
@@ -74,6 +78,7 @@ export class cartsRepository {
     async deleteCart(cid) {
         try {
             var cart = await this.dao.getCartById(cid, false);
+            if(cart == -1) return -1;
 
             cart.products = [];
 
@@ -88,6 +93,8 @@ export class cartsRepository {
     async deleteCartProduct(cid, pid) {
         try {
             var cart = await this.dao.getCartById(cid, false);
+            if(cart == -1) return -1;
+
             await this.daoP.getProductById(pid);
 
             var index = cart.products.findIndex(prod => prod._id == pid);
@@ -106,6 +113,8 @@ export class cartsRepository {
     async purchaseCart(cid) {
         try {
             const cart = await this.dao.getCartById(cid);
+            if(cart == -1) return -1;
+
             var priceTotal = 0;
 
             const updatedProducts = await Promise.all(cart.products.map(async(product) => {

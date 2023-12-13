@@ -16,5 +16,12 @@ export const config = {
     },
     jwt: {
         private_key: process.env.JWT_PRIVATE_KEY
+    },
+    error: {
+        database: process.env.DATABASE_ERROR,
+        auth: process.env.AUTH_ERROR,
+        invalid_body: process.env.INVALID_BODY_JSON,
+        invalid_param: process.env.INVALID_PARAM,
+        invalid_id: process.env.INVALID_ID
     }
 }

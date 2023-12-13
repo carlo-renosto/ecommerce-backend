@@ -11,14 +11,15 @@ import path from "path";
 import passport from "passport";
 import { initializePassport } from "./config/passport.config.js";
 
-import { socketServer } from "./sockets/socketserver.js";
+import { logger } from "./config/logger.js";
+
+import { socketServer } from "./websocket/socketserver.js";
 
 import { viewsRouter } from "./routes/views.routes.js";
 import { productsRouter } from "./routes/products.routes.js";
 import { cartsRouter } from "./routes/carts.routes.js";
 import { chatsRouter } from "./routes/chats.routes.js";
 import { sessionsRouter } from "./routes/sessions.routes.js";
-import { errorHandler } from "./middlewares/errorhandler.js";
 
 const port = 8080; 
 const app = express(); 
@@ -48,4 +49,10 @@ app.use("/api/chats", chatsRouter);
 app.use("/api/sessions", sessionsRouter);
 app.use(viewsRouter);
 
-app.use(errorHandler);
+app.get("/loggerTest", (request, response) => {
+    logger.debug("Debug message");
+    logger.http("HTTP message");
+    logger.warn("Warn message");
+    logger.error("Error message");
+    response.sendStatus(204);
+});

@@ -1,13 +1,7 @@
 
 import { cartsModel } from "../../models/carts.models.js";
-import { productManagerMongo } from "./product.mongo.js"
-import { userManagerMongo } from "./user.mongo.js";
-import { ticketManagerMongo } from "./ticket.mongo.js";
-
-const productMongo = new productManagerMongo();
-const userMongo = new userManagerMongo();
-const ticketMongo = new ticketManagerMongo();
-
+import { customError } from "../../../repository/errors/customError.service.js";
+import { invalidIdError } from "../../../repository/errors/invalidIdError.js";
 
 export class cartManagerMongo {
     constructor() { 
@@ -31,23 +25,22 @@ export class cartManagerMongo {
 
             if(isPopulated) {
                 cart = await this.model.findById(id).populate({path: "products._id", model: "products"});
+                if(cart == null) customError.createError(invalidIdError("Get cart error"));
+                
                 cart = cart.toObject();
 
-                cart.products = cart.products.map(product => ({
-                    product: product._id, 
-                    quantity: product.quantity
-                }));
+                cart.products = cart.products.map(product => ({product: product._id, quantity: product.quantity}));
             }
             else {
                 cart = await this.model.findById(id).lean();
+                if(cart == null) customError.createError(invalidIdError("Get cart error"));
             }
-            
-            if(cart == null) throw new Error("CID inexistente");
 
             return cart;
         }
         catch(error) {
             console.log("Error (cart.mongo.js): " + error.message);
+            return -1;
         }
     }
 
@@ -57,20 +50,21 @@ export class cartManagerMongo {
 
             if(isPopulated) {
                 cart = await this.model.findOne({_uid: uid}).populate({path: "products._id", model: "products"});
+                if(cart == null) customError.createError(invalidIdError("Get cart error"));
 
                 cart = cart.toObject();
                 cart.products = cart.products.map(product => ({product: product._id, quantity: product.quantity}));
             }
             else {
                 cart = await this.model.findOne({_uid: uid}).lean();
+                if(cart == null) customError.createError(invalidIdError("Get cart error"));
             }
-            
-            if(cart == null) throw new Error("UID inexistente");
-
+        
             return cart;
         }
         catch(error) {
             console.log("Error (cart.mongo.js): " + error.message);
+            return -1;
         }
     }
 
