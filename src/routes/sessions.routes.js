@@ -3,11 +3,12 @@ import { Router } from "express";
 import { config } from "../config/config.js";
 import { authenticate } from "../middlewares/auth.js";
 
-import { generateToken } from "../utils.js";
+import { createPasswordHash, generateToken } from "../utils.js";
 
 import { usersController } from "../controller/users.controller.js";
 
-import { transport } from "../config/configGmail.js";
+import { generateTokenEmail, sendPwChangeEmail, verifyTokenEmail } from "../config/configGmail.js";
+import { userService } from "../repository/index.js";
 
 const router = Router();
 
@@ -24,7 +25,7 @@ router.get("/recover", (request, response) => {
 });
 
 router.get("/recover-form", (request, response) => {
-
+    response.render("recoverForm");
 });
 
 router.post("/user-login", authenticate("loginLocalStrategy"), async(request, response) => {
@@ -59,24 +60,34 @@ router.post("/user-recover", async(request, response) => {
     try {
         const email = request.body.email;
 
-        const result = await transport.sendMail({
-            from: config.gmail.account,
-            to: email,
-            subject: "Recuperacion de cuenta",
-            html: `
-                <p>Hola ${email}, haga clic aquí para recuperar su cuenta:</p>
-                <a href="http://localhost:8080/api/sessions/recover-form">Recuperar</a>
+        const emailToken = generateTokenEmail(email, 10 * 60);
 
-                <p>Nota: Este es un mensaje de prueba.</p>
-            `
-        })
-        
-        console.log(result);
+        await sendPwChangeEmail(request, email, emailToken);
+
         response.json({status: "success", message: "Correo enviado"});
     }
     catch(error) {
         console.log(error);
         response.json({status: "error", message: "Correo no enviado (error)"});
+    }
+});
+
+router.post("/user-recover-form", async(request, response) => {
+    try {
+        const password = request.body.password;
+        const token = request.query.token;
+        const email = verifyTokenEmail(token);
+
+        const user = await userService.getUserByEmail(email);
+        user._doc.password = createPasswordHash(password);
+
+        await userService.updateUser(user._id, user);
+
+        response.render("login", {message: "Contraseña reestablecida"});
+    }
+    catch(error) {
+        console.log(error);
+        response.json({status: "error", message: "Contraseña no reestablecida (error)"});
     }
 });
 

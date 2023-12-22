@@ -67,4 +67,15 @@ export class userManagerMongo {
             return null;
         }
     }
+
+    async updateUser(id, user) {
+        try {
+            const userUpdated = await this.model.findByIdAndUpdate(id, user);
+
+            return userUpdated;
+        } 
+        catch(error) {
+            logger.error("Error (user.mongo.js): " + error.message);
+        }
+    }
 }

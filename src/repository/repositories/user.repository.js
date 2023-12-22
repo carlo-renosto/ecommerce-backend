@@ -65,4 +65,15 @@ export class userRepository {
             logger.error("Error (user.repository.js): " + error.message);
         }
     }
+
+    async updateUser(id, user) {
+        try {
+            const userUpdated = await this.dao.updateUser(id, user);
+            
+            return userUpdated;
+        }
+        catch(error) {
+            logger.error("Error (user.repository.js): " + error.message);
+        }
+    }
 }

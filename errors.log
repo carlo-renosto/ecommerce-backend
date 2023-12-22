@@ -13,3 +13,61 @@ error: Error (user.mongo.js): {
  "code": "9",
  "cause": "Se ha recibido un email ya existente. El email pertenece a un usuario."
 }
+error: Error (user.mongo.js): {
+ "name": "Email duplicado",
+ "code": "9",
+ "cause": "Se ha recibido un email ya existente. El email pertenece a un usuario."
+}
+error: Error (user.mongo.js): {
+ "name": "Email duplicado",
+ "code": "9",
+ "cause": "Se ha recibido un email ya existente. El email pertenece a un usuario."
+}
+error: Error (user.mongo.js): {
+ "name": "Email duplicado",
+ "code": "9",
+ "cause": "Se ha recibido un email ya existente. El email pertenece a un usuario."
+}
+error: Error (user.mongo.js): {
+ "name": "Email duplicado",
+ "code": "9",
+ "cause": "Se ha recibido un email ya existente. El email pertenece a un usuario."
+}
+error: Error (user.mongo.js): {
+ "name": "Email duplicado",
+ "code": "9",
+ "cause": "Se ha recibido un email ya existente. El email pertenece a un usuario."
+}
+error: Error (user.mongo.js): {
+ "name": "Email duplicado",
+ "code": "9",
+ "cause": "Se ha recibido un email ya existente. El email pertenece a un usuario."
+}
+error: Error (user.mongo.js): {
+ "name": "Email duplicado",
+ "code": "9",
+ "cause": "Se ha recibido un email ya existente. El email pertenece a un usuario."
+}
+error: Error (user.mongo.js): {
+ "name": "Email duplicado",
+ "code": "9",
+ "cause": "Se ha recibido un email ya existente. El email pertenece a un usuario."
+}
+error: Error (user.mongo.js): {
+ "name": "Email duplicado",
+ "code": "9",
+ "cause": "Se ha recibido un email ya existente. El email pertenece a un usuario."
+}
+error: Error (user.repository.js): Cannot access 'user' before initialization
+error: Error (cart.mongo.js): {
+ "name": "ID inválido",
+ "code": "5",
+ "cause": "Se ha recibido un ID inválido. El ID no pertenece a ninguna búsqueda."
+}
+error: Error (user.repository.js): Cannot access 'user' before initialization
+error: Error (user.repository.js): Cannot access 'user' before initialization
+error: Error (cart.mongo.js): {
+ "name": "ID inválido",
+ "code": "5",
+ "cause": "Se ha recibido un ID inválido. El ID no pertenece a ninguna búsqueda."
+}
