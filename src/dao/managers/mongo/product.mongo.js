@@ -1,5 +1,10 @@
 
 import { productsModel } from "../../models/products.models.js";
+import { logger } from "../../../config/logger.js";
+import { customError } from "../../../repository/errors/customError.service.js";
+import { invalidIdError } from "../../../repository/errors/invalidIdError.js";
+import { invalidCodeError } from "../../../repository/errors/invalidCodeError.js";
+import { duplicatedCodeError } from "../../../repository/errors/duplicatedCodeError.js";
 
 export class productManagerMongo {
     constructor() {
@@ -8,11 +13,21 @@ export class productManagerMongo {
 
     async createProduct(productInfo) {
         try {
+            const productExisting = await this.getProductByCode(productInfo.code);
+            if(productExisting != -1) customError.createError(duplicatedCodeError("Create product error"));
+
             const product = await this.model.create(productInfo);
             return product;
         }
         catch(error) {
-            console.log("Error (product.mongo.js): " + error.message);
+            const errorLog = {
+                name: error.message,
+                code: error.code,
+                cause: error.cause
+            }
+
+            logger.error("Error (product.mongo.js): " + JSON.stringify(errorLog, null, 1));
+            return -1;
         }
     }
 
@@ -38,19 +53,52 @@ export class productManagerMongo {
             return products;
         }
         catch(error) {
-            console.log("Error (product.mongo.js): " + error.message);
+            const errorLog = {
+                name: error.message,
+                code: error.code,
+                cause: error.cause
+            }
+
+            logger.error("Error (product.mongo.js): " + JSON.stringify(errorLog, null, 1));
+            return -1;
         }
     }
 
     async getProductById(id) {
         try {
             const product = await this.model.findById(id);
-            if(product == null) throw new Error("PID inexistente");
+            if(product == null) customError.createError(invalidIdError("Get product error"));
 
             return product;
         }
         catch(error) {
-            console.log("Error (product.mongo.js): " + error.message);
+            const errorLog = {
+                name: error.message,
+                code: error.code,
+                cause: error.cause
+            }
+
+            logger.error("Error (product.mongo.js): " + JSON.stringify(errorLog, null, 1));
+            return -1;
+        }
+    }
+
+    async getProductByCode(code) {
+        try {
+            const product = await this.model.findOne({code: code});
+            if(product == null) customError.createError(invalidCodeError("Get product error"));
+
+            return product;
+        }
+        catch(error) {
+            const errorLog = {
+                name: error.message,
+                code: error.code,
+                cause: error.cause
+            }
+
+            logger.error("Error (product.mongo.js): " + JSON.stringify(errorLog, null, 1));
+            return -1;
         }
     }
 
@@ -59,22 +107,36 @@ export class productManagerMongo {
             await this.model.findByIdAndUpdate(id, productInfo);
 
             const product = await this.model.findById(id);
-            if(product == null) throw new Error("PID inexistente");
+            if(product == null) customError.createError(invalidIdError("Get product error"));
 
             return product;
         }
         catch {
-            console.log("Error (product.mongo.js): " + error.message); 
+            const errorLog = {
+                name: error.message,
+                code: error.code,
+                cause: error.cause
+            }
+
+            logger.error("Error (product.mongo.js): " + JSON.stringify(errorLog, null, 1));
+            return -1;
         }
     }
 
     async deleteProduct(id) {
         try {
             const product = await this.model.findByIdAndDelete(id);
-            if(product == null) throw new Error("PID inexistente");
+            if(product == null) customError.createError(invalidIdError("Get product error"));
         }
         catch {
-            console.log("Error (product.mongo.js): " + error.message); 
+            const errorLog = {
+                name: error.message,
+                code: error.code,
+                cause: error.cause
+            }
+
+            logger.error("Error (product.mongo.js): " + JSON.stringify(errorLog, null, 1));
+            return -1;
         }
     }
 }

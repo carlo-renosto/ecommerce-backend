@@ -1,4 +1,9 @@
 
+.menu {
+    display: block;
+    margin-bottom: 10px;
+}
+
 #div-container {
     display: table;
     margin-bottom: 10px;

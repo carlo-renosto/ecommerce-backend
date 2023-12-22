@@ -1,5 +1,6 @@
 
 import { ticketsModel } from "../../models/tickets.models.js";
+import { logger } from "../../../config/logger.js";
 
 export class ticketManagerMongo {
     constructor() { 
@@ -13,8 +14,7 @@ export class ticketManagerMongo {
             return ticketCreated;
         }
         catch(error) {
-            console.log("Error (ticket.mongo.js): " + error.message);
-            throw error;
+            logger.error("Error (ticket.mongo.js): " + error.message);
         }
     }
 }

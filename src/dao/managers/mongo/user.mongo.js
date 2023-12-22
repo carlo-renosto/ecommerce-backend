@@ -1,5 +1,9 @@
 
 import { usersModel } from "../../models/users.models.js";
+import { logger } from "../../../config/logger.js";
+import { customError } from "../../../repository/errors/customError.service.js";
+import { invalidIdError } from "../../../repository/errors/invalidIdError.js";
+import { duplicatedEmailError } from "../../../repository/errors/duplicatedEmailError.js";
 
 export class userManagerMongo {
     constructor() {
@@ -12,7 +16,7 @@ export class userManagerMongo {
             return user;
         }
         catch(error) {
-            console.log("Error (user.mongo.js): " + error.message);
+            logger.error("Error (user.mongo.js): " + error.message);
         }
     }
 
@@ -22,31 +26,45 @@ export class userManagerMongo {
             return users;
         }
         catch(error) {
-            console.log("Error (user.mongo.js): " + error.message);
+            logger.error("Error (user.mongo.js): " + error.message);
         }
     }
 
     async getUserById(id) {
         try {
             const user = await this.model.findById(id);
-            if(user == null) throw new Error("UID inexistente");
+            if(user == null) customError.createError(invalidIdError("Get user error"));
 
             return user;
         }
         catch(error) {
-            console.log("Error (user.mongo.js): " + error.message);
+            const errorLog = {
+                name: error.message,
+                code: error.code,
+                cause: error.cause
+            }
+
+            logger.error("Error (user.mongo.js): " + JSON.stringify(errorLog, null, 1));
+            return null;
         }
     }
 
     async getUserByEmail(email) {
         try {
             const user = await this.model.findOne({email: email});
-            if(user == null) throw new Error("Email inexistente");
+            if(user == null) customError.createError(duplicatedEmailError("Get user error"));
 
             return user;
         }
         catch(error) {
-            console.log("Erro (user.mongo.js): " + error.message);
+            const errorLog = {
+                name: error.message,
+                code: error.code,
+                cause: error.cause
+            }
+
+            logger.error("Error (user.mongo.js): " + JSON.stringify(errorLog, null, 1));
+            return null;
         }
     }
 }

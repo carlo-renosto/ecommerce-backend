@@ -3,12 +3,12 @@ import passport from "passport";
 export const authenticate  = (strategy) => { 
     const passportAuthenticate = async(request, response, next) => {
         passport.authenticate(strategy, {session: false}, (err, user, info) => {
-            if(err) return next(err);
-
-            if(!user) {
+            if(err) return next(err); 
+            
+            if(!user && strategy != "signupLocalStrategy" && strategy != "signupGithubStrategy") {
                 return response.redirect("/api/sessions/login");
             }
-            
+
             request.user = user;
             next();
         })(request, response, next)
@@ -21,7 +21,7 @@ export const authorize = (role) => {
     return async(request, response, next) => {
         if(!request.user) return response.status(401).json({error: "Usuario no autenticado"});
 
-        if(request.user.role !== role) {
+        if(!role.includes(request.user.role)) {
             return response.status(403).json({error: "Permisos insuficientes"});
         };
         next();

@@ -1,0 +1,15 @@
+error: Error (error.js): {
+ "name": "ID inválido",
+ "code": "4",
+ "cause": "Se ha recibido un ID inválido. El ID tiene que ser alfanumérico. Ejemplo: 651f20d37ddebb31530de063"
+}
+error: Error (product.mongo.js): {
+ "name": "Código inválido",
+ "code": "6",
+ "cause": "Se ha recibido un código inválido. El código no pertenece a ninguna búsqueda."
+}
+error: Error (user.mongo.js): {
+ "name": "Email duplicado",
+ "code": "9",
+ "cause": "Se ha recibido un email ya existente. El email pertenece a un usuario."
+}

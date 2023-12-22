@@ -54,5 +54,6 @@ app.get("/loggerTest", (request, response) => {
     logger.http("HTTP message");
     logger.warn("Warn message");
     logger.error("Error message");
+    logger.fatal("Fatal message");
     response.sendStatus(204);
 });

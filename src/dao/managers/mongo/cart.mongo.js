@@ -1,7 +1,9 @@
 
 import { cartsModel } from "../../models/carts.models.js";
+import { logger } from "../../../config/logger.js";
 import { customError } from "../../../repository/errors/customError.service.js";
 import { invalidIdError } from "../../../repository/errors/invalidIdError.js";
+import { duplicatedIdError } from "../../../repository/errors/duplicatedIdError.js";
 
 export class cartManagerMongo {
     constructor() { 
@@ -15,7 +17,16 @@ export class cartManagerMongo {
             return cart;
         }
         catch(error) {
-            console.log("Error (cart.mongo.js): " + error.message);
+            var errorD = customError.createError(duplicatedIdError("Create cart error"), 0);
+            
+            const errorLog = {
+                name: errorD.message,
+                code: errorD.errorCode,
+                cause: errorD.cause
+            }
+            
+            logger.error("Error (cart.mongo.js): " + JSON.stringify(errorLog, null, 1));
+            return -1;
         }
     }
 
@@ -39,7 +50,13 @@ export class cartManagerMongo {
             return cart;
         }
         catch(error) {
-            console.log("Error (cart.mongo.js): " + error.message);
+            const errorLog = {
+                name: error.message,
+                code: error.code,
+                cause: error.cause
+            }
+
+            logger.error("Error (cart.mongo.js): " + JSON.stringify(errorLog, null, 1));
             return -1;
         }
     }
@@ -63,7 +80,13 @@ export class cartManagerMongo {
             return cart;
         }
         catch(error) {
-            console.log("Error (cart.mongo.js): " + error.message);
+            const errorLog = {
+                name: error.message,
+                code: error.code,
+                cause: error.cause
+            }
+
+            logger.error("Error (cart.mongo.js): " + JSON.stringify(errorLog, null, 1));
             return -1;
         }
     }
@@ -73,24 +96,41 @@ export class cartManagerMongo {
             await this.model.findByIdAndUpdate(cid, cart);
 
             const cartUpdated = await this.model.findById(cid);
+            if(cartUpdated == null) customError.createError(invalidIdError("Get cart error"));
             
             return cartUpdated;
         }
         catch(error) {
-            console.log("Error (cart.mongo.js): " + error.message);
+            const errorLog = {
+                name: error.message,
+                code: error.code,
+                cause: error.cause
+            }
+
+            logger.error("Error (cart.mongo.js): " + JSON.stringify(errorLog, null, 1));
+            return -1;
         }
     }
 
     async updateCartProduct(cid, cart) {
         try {
             await this.model.findByIdAndUpdate(cid, cart);
-
+            
             const cartUpdated = await this.model.findById(cid);
+            if(cartUpdated == null) customError.createError(invalidIdError("Get cart error"));
+
 
             return cartUpdated;
         }
         catch(error) {
-            console.log("Error (cart.mongo.js): " + error.message);
+            const errorLog = {
+                name: error.message,
+                code: error.code,
+                cause: error.cause
+            }
+
+            logger.error("Error (cart.mongo.js): " + JSON.stringify(errorLog, null, 1));
+            return -1;
         }
     }
 
@@ -99,11 +139,19 @@ export class cartManagerMongo {
             await this.model.findByIdAndUpdate(cid, cart);
 
             const cartUpdated = await this.model.findById(cid);
+            if(cartUpdated == null) customError.createError(invalidIdError("Get cart error"));
 
             return cartUpdated;
         }
         catch(error) {
-            console.log("Error (cart.mongo.js): " + error.message);
+            const errorLog = {
+                name: error.message,
+                code: error.code,
+                cause: error.cause
+            }
+
+            logger.error("Error (cart.mongo.js): " + JSON.stringify(errorLog, null, 1));
+            return -1;
         }
     }
 
@@ -112,19 +160,38 @@ export class cartManagerMongo {
             await this.model.findByIdAndUpdate(cid, cart);
 
             const cartUpdated = await this.model.findById(cid);
+            if(cartUpdated == null) customError.createError(invalidIdError("Get cart error"));
+
             return cartUpdated;
         }
         catch(error) {
-            console.log("Error (cart.mongo.js): " + error.message);
+            const errorLog = {
+                name: error.message,
+                code: error.code,
+                cause: error.cause
+            }
+
+            logger.error("Error (cart.mongo.js): " + JSON.stringify(errorLog, null, 1));
+            return -1;
         }
     }
 
     async purchaseCart(cid, cart) {
         try {
-            await this.model.findByIdAndUpdate(cid, cart);
+            const cartUpdated = await this.model.findByIdAndUpdate(cid, cart);
+            if(cartUpdated == null) customError.createError(invalidIdError("Get cart error"));
+
+            return cartUpdated;
         } 
         catch(error) {
-            console.log("Error (cart.mongo.js): " + error.message);
+            const errorLog = {
+                name: error.message,
+                code: error.code,
+                cause: error.cause
+            }
+
+            logger.error("Error (cart.mongo.js): " + JSON.stringify(errorLog, null, 1));
+            return -1;
         }
     }
     

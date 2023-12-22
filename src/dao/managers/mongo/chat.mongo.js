@@ -1,5 +1,6 @@
 
 import { chatModel } from "../../models/chat.model.js";
+import { logger } from "../../../config/logger.js";
 
 export class chatManagerMongo {
     constructor() {
@@ -12,7 +13,7 @@ export class chatManagerMongo {
             return messages;
         }
         catch(error) {
-            console.log("Error (chat.mongo.js): " + error.message);
+            logger.error("Error (chat.mongo.js): " + error.message);
         }
     }
 
@@ -22,7 +23,7 @@ export class chatManagerMongo {
             return message;
         }
         catch(error) {
-            console.log("Error (chat.mongo.js): " + error.message);
+            logger.error("Error (chat.mongo.js): " + error.message);
         }
     }
 }

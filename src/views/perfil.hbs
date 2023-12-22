@@ -1,4 +1,24 @@
 
+<link rel="stylesheet" type="text/css" href="/css/perfil.css">
+
 <h1>Perfil</h1>
 
-<p>Bienvenido/a {{user.email}}, rol: {{user.role}}</p>
+ <div>
+    <div id="div-user">
+        <div id="div-container">
+            <div id="div-content">
+                <h3>Nombre: {{user.fullName}}</h3>
+                <hr>
+                <h3>Carrito</h3>
+                <hr>                
+                {{#each user.products}}
+                <ul>
+                    <li>
+                        <p>{{this.product.title}}</p>
+                        <p>Cantidad: {{this.quantity}}</p>
+                    </li>
+                </ul> 
+                {{/each}}
+            </div>
+        </div>
+    </div>

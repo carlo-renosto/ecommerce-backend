@@ -1,6 +1,5 @@
 
 import { Server } from "socket.io";
-import { chatService } from "../repository/index.js";
 import { productsService } from "../repository/index.js";
 
 // chat socket
@@ -23,21 +22,8 @@ export class socketServer {
         this.socket.emit("messages", object);                
     }
 
-    async addMessage(message) {
-        try {
-            const messageInfo = {
-                user: "User",
-                message: message,
-            };
-    
-            await chatService.addMessage(messageInfo);
-            this.messages.push(messageInfo);
-
-            this.socket.emit("messages-update", messageInfo);
-        }
-        catch(error) {
-            console.error("Error: " + error);
-        }
+    addMessage(message) {
+        this.socket.emit("message-add", message);
     }
 
     async getProducts(localSocket) {

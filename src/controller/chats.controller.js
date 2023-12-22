@@ -29,8 +29,8 @@ export class chatsController {
 
             await chatService.addMessage(messageInfo);
 
+            socket_server.addMessage(messageInfo);
             response.sendStatus(204);
-            socket_server.socket.emit("message-add", messageInfo);
         }
         catch(error) {
             response.json({status: "error", message: "Mensaje no añadido (error)"});

@@ -4,10 +4,52 @@ import { cartManagerDao } from "../../dao/index.js";
 
 import { usersDto } from "../../dao/dto/users.dto.js";
 
-export class usersRepository {
+import { logger } from "../../config/logger.js";
+
+export class userRepository {
     constructor() {
         this.dao = userManagerDao;
         this.daoC = cartManagerDao;
+    }
+
+    async createUser(userInfo) {
+        try {   
+            const user = await this.dao.createUser(userInfo);
+            return user;
+        }
+        catch(error) {
+            logger.error("Error (user.repository.js): " + error.message);
+        }
+    }
+
+    async getUsers() {
+        try {
+            const users = await this.dao.getUsers();
+            return users;
+        }
+        catch(error) {
+            logger.error("Error (user.repository.js): " + error.message);
+        }
+    }
+
+    async getUserById(id) {
+        try {
+            const user = await this.dao.getUserById(id);
+            return user;
+        }
+        catch(error) {
+            logger.error("Error (user.repository.js): " + error.message);
+        }
+    }
+
+    async getUserByEmail(email) {
+        try {
+            const user = await this.dao.getUserByEmail(email);
+            return user;
+        }
+        catch(error) {
+            logger.error("Error (user.repository.js): " + error.message);
+        }
     }
 
     async getUserPopulate(email) {
@@ -20,7 +62,7 @@ export class usersRepository {
             return userDto;
         }
         catch(error) {
-            console.log("Error (user.repository.js): " + error.message);
+            logger.error("Error (user.repository.js): " + error.message);
         }
     }
 }

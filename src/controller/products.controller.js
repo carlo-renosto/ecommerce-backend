@@ -11,6 +11,7 @@ export class productsController {
             const sort = request.query.sort == undefined ? 0 : parseInt(request.query.sort);
     
             var products = await productsService.getProducts(limit, page, query, sort);
+            if(products == -1) throw new Error();
                     
             response.json({status: "success", data: products});
         }
@@ -22,6 +23,7 @@ export class productsController {
     static getProductsView = async(request, response) => {
         try {
             const products = await productsService.getProducts(10, 1);
+            if(products == -1) throw new Error();
 
             const object = {
                 products: products,
@@ -29,7 +31,25 @@ export class productsController {
                 role: request.user.role
             }
 
-            response.render("products", {object});
+            response.render("productsView", {object});
+        }
+        catch(error) {
+            response.render("products");
+        }
+    }
+
+    static getProductsCreate = (request, response) => {
+        try {
+            response.render("productsAdd");
+        }
+        catch(error) {
+            response.render("products");
+        }
+    }
+
+    static getProductsDelete = (request, response) => {
+        try {
+            response.render("productsDelete");
         }
         catch(error) {
             response.render("products");
@@ -41,6 +61,8 @@ export class productsController {
             const id = request.params.pid;
     
             const product = await productsService.getProductById(id);
+            if(product == -1) throw new Error();
+
             response.json({status: "success", data: product});
         }
         catch(error) {
@@ -51,7 +73,10 @@ export class productsController {
     static createProduct = async(request, response) => {
         try {
             const productInfo = request.body;
-            const productCreated = await productsService.createProduct(productInfo)
+            productInfo.owner = request.user.id;
+
+            const productCreated = await productsService.createProduct(productInfo);
+            if(productCreated == -1) throw new Error();
     
             socket_server.socket.emit("product-add", productCreated);
     
@@ -68,6 +93,7 @@ export class productsController {
             const productInfo = request.body;
     
             const productUpdated = await productsService.updateProduct(id, productInfo);
+            if(productUpdated == -1) throw new Error();
     
             socket_server.socket.emit("product-update", productUpdated);
     
@@ -80,9 +106,15 @@ export class productsController {
 
     static deleteProduct = async(request, response) => {
         try {
-            const id = request.params.pid;
-    
-            await productsService.deleteProduct(id);
+            const id = request.body.pid || request.params.pid;
+            
+            if(request.user.role == "premium") {
+                await productsService.deleteProduct(id, request.user.id, true);
+            }
+            else {
+                await productsService.deleteProduct(id);
+            }
+            
     
             socket_server.socket.emit("product-delete", id);
     

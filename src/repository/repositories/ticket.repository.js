@@ -1,5 +1,6 @@
 
 import { ticketManagerDao } from "../../dao/index.js";
+import { logger } from "../../config/logger.js";
 
 export class ticketRepository {
     constructor() { 
@@ -13,8 +14,7 @@ export class ticketRepository {
             return ticketCreated;
         }
         catch(error) {
-            console.log("Error (ticket.repository.js): " + error.message);
-            throw error;
+            logger.error("Error (ticket.repository.js): " + error.message);
         }
     }
 }

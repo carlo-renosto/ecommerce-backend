@@ -1,6 +1,8 @@
 
 import { productManagerDao } from "../../dao/index.js";
 
+import { logger } from "../../config/logger.js";
+
 export class productsRepository {
     constructor() {
         this.dao = productManagerDao;
@@ -12,7 +14,7 @@ export class productsRepository {
             return product;
         }
         catch(error) {
-            console.log("Error (product.repository.js): " + error.message);
+            logger.error("Error (product.repository.js): " + error.message);
         }
     }
 
@@ -22,7 +24,7 @@ export class productsRepository {
             return products;
         }
         catch(error) {
-            console.log("Error (product.repository.js): " + error.message);
+            logger.error("Error (product.repository.js): " + error.message);
         }
     }
 
@@ -32,7 +34,7 @@ export class productsRepository {
             return product;
         }   
         catch(error) {
-            console.log("Error (product.repository.js): " + error.message);
+            logger.error("Error (product.repository.js): " + error.message);
         }
     }
 
@@ -42,16 +44,23 @@ export class productsRepository {
             return product;
         }
         catch(error) {
-            console.log("Error (product.repository.js): " + error.message);
+            logger.error("Error (product.repository.js): " + error.message);
         }
     }
 
-    async deleteProduct(id) {
+    async deleteProduct(id, uid=0, isUserPremium=false) {
         try {
+            if(isUserPremium) {
+                const product = await this.dao.getProductById(id);
+
+                if(uid != product.owner) throw new Error("Permisos insuficientes");
+            }
+
             await this.dao.deleteProduct(id);
         }
         catch(error) {
-            console.log("Error (product.repository.js): " + error.message);
+            logger.error("Error (product.repository.js): " + error.message);
+            throw error;
         }
     }
 }

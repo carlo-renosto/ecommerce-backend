@@ -3,8 +3,9 @@ import passport from "passport";
 import localStrategy from "passport-local";
 import GithubStrategy from "passport-github2";
 import jwt from "passport-jwt"
+
 import { config } from "./config.js";
-import { usersModel } from "../dao/models/users.models.js";
+import { userService } from "../repository/index.js";
 import { createPasswordHash, comparePasswordHash } from "../utils.js";
 
 const JWTStrategy = jwt.Strategy;
@@ -17,7 +18,7 @@ export const initializePassport = () => {
     },
     async(JWTPayload, done) => {
         try {
-           return done(null, JWTPayload); 
+            return done(null, JWTPayload); 
         } 
         catch(error) {
             return done(error);
@@ -32,8 +33,7 @@ export const initializePassport = () => {
         async(request, username, password, done) => {
             const {first_name} = request.body;
             try {
-                const user = await usersModel.findOne({email: username});
-
+                const user = await userService.getUserByEmail(username);
                 if(user) {
                     return done(null, false);
                 }
@@ -46,7 +46,7 @@ export const initializePassport = () => {
                     password: createPasswordHash(password)
                 };
 
-                const userCreated = await usersModel.create(userNew);
+                const userCreated = await userService.createUser(userNew);
                 return done(null, userCreated);
             } 
             catch(error) {
@@ -63,21 +63,32 @@ export const initializePassport = () => {
         },
         async(accessToken, refreshToken, profile, done) => {
             try {
-                const user = await usersModel.findOne({email: profile.username});
+                const user = await userService.getUserByEmail(profile.username);
                 if(user) {
-                    return done(null, user);
+                    return done(null, false);
                 }
 
                 const newUser = {
-                    first_name: profile._json.name,
+                    first_name: profile.username,
+                    last_name: "",
                     email: profile.username,
                     password: createPasswordHash(profile.id)
                 };
 
-                const userCreated = await usersModel.create(newUser);
+                const userCreated = await userService.createUser(newUser);
+
                 return done(null, userCreated);
             } 
             catch(error) {
+                const errorLog = {
+                    name: error.message,
+                    code: error.code,
+                    cause: error.cause
+                }
+
+                console.log(errorLog);
+                
+                logger.error("Error (cart.mongo.js): " + JSON.stringify(errorLog, null, 1));
                 return done(error);
             }
         }
@@ -89,8 +100,7 @@ export const initializePassport = () => {
         },
         async(username, password, done) => {
             try {
-                const user = await usersModel.findOne({email: username});
-
+                const user = await userService.getUserByEmail(username);
                 if(!user) {
                     return done(null, false);
                 }
@@ -114,8 +124,7 @@ export const initializePassport = () => {
         },
         async(accessToken, refreshToken, profile, done) => {
             try {
-                const user = await usersModel.findOne({email: profile.username});
-                
+                const user = await userService.getUserByEmail(profile.username);
                 if(!user) {
                     return done(null, false);
                 }

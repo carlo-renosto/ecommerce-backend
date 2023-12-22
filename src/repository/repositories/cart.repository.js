@@ -4,6 +4,8 @@ import { productManagerDao } from "../../dao/index.js";
 import { userManagerDao } from "../../dao/index.js";
 import { ticketManagerDao } from "../../dao/index.js";
 
+import { logger } from "../../config/logger.js";
+
 export class cartsRepository {
     constructor() {
         this.dao = cartManagerDao;
@@ -20,7 +22,7 @@ export class cartsRepository {
             return cart;
         }
         catch(error) {
-            console.log("Error (cart.repository.js): " + error.message);
+            logger.error("Error (cart.repository.js): " + error.message);
         }
     }
 
@@ -31,7 +33,18 @@ export class cartsRepository {
             return cart;
         }
         catch(error) {
-            console.log("Error (cart.repository.js): " + error.message);
+            logger.error("Error (cart.repository.js): " + error.message);
+        }
+    }
+
+    async getCartByUid(uid) {
+        try {
+            const cart = await this.dao.getCartByUid(uid);
+
+            return cart;
+        }
+        catch(error) {
+            logger.error("Error (cart.repository.js): " + error.message);
         }
     }
 
@@ -46,7 +59,7 @@ export class cartsRepository {
             return cartUpdated;
         }
         catch(error) {
-            console.log("Error (cart.repository.js): " + error.message);
+            logger.error("Error (cart.repository.js): " + error.message);
         }
     }
 
@@ -71,7 +84,7 @@ export class cartsRepository {
             return cartUpdated;
         }
         catch(error) {
-            console.log("Error (cart.repository.js): " + error.message);
+            logger.error("Error (cart.repository.js): " + error.message);
         }
     }
 
@@ -86,7 +99,7 @@ export class cartsRepository {
             return cartCleared;
         }
         catch(error) {
-            console.log("Error (cart.repository.js): " + error.message);
+            logger.error("Error (cart.repository.js): " + error.message);
         }
     }
 
@@ -95,10 +108,11 @@ export class cartsRepository {
             var cart = await this.dao.getCartById(cid, false);
             if(cart == -1) return -1;
 
-            await this.daoP.getProductById(pid);
+            var product = await this.daoP.getProductById(pid);
+            if(product == -1) return -1;
 
             var index = cart.products.findIndex(prod => prod._id == pid);
-            if(index == -1) throw new Error("PID no encontrado (carrito)");
+            if(index == -1) return -1;
 
             cart.products = cart.products.filter(prod => prod._id.toString() !== pid);
 
@@ -106,7 +120,14 @@ export class cartsRepository {
             return cartUpdated;
         }
         catch(error) {
-            console.log("Error (cart.repository.js): " + error.message);
+            const errorLog = {
+                name: error.message,
+                code: error.code,
+                cause: error.cause
+            }
+
+            logger.error("Error (cart.mongo.js): " + JSON.stringify(errorLog, null, 1));
+            return -1;
         }
     }
 
@@ -146,7 +167,7 @@ export class cartsRepository {
             return ticket;
         }   
         catch(error) {
-            console.log("Error (cart.repository.js): " + error.message);
+            logger.error("Error (cart.repository.js): " + error.message);
         }
     }
 }

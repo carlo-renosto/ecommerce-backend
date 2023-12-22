@@ -1,4 +1,9 @@
 
+.menu {
+    display: block;
+    margin-bottom: 10px;
+}
+
 #div-products {
     display: inline-block;
 }
@@ -31,4 +36,13 @@ h3, button {
 
 .visible {
     display: block;
+}
+
+input {
+    display: block;
+    margin-bottom: 10px;
+}
+
+#input-product {
+    display: inline-block;
 }

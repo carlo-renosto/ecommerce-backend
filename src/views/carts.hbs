@@ -3,28 +3,7 @@
 
 <h1>Carritos</h1>
 
-<form method="get" action="/carts/:cid">
-    <input type="text" placeholder="ID" name="cid">
-    <input type="submit" value="Buscar">
-</form>
-
-{{#if this._id}}
-<div id="div-container">
-    <div id="div-content">
-        <h3>ID {{this._id}}</h3>
-             
-         {{#each products}}
-         <h4>{{this.product.title}}, ID {{this.product._id}}</h4><button class="button">+</button>
-            <ul class="hidden">
-                <li><p>Codigo: {{this.product.code}}</p></li>
-                <li><p>Precio: ${{this.product.price}}</p></li>
-                <li><p>Stock: {{this.product.stock}} unidades</p></li>
-                <li><p>Categoria: {{this.product.category}}</p></li>
-                <li><p>Imagen: {{this.product.thumbnail}}</p></li>
-            </ul>
-         {{/each}}
-    </div>
-</div>
-{{/if}}
-
-<script src="/js/cart.js"></script>
+<a href="/api/carts/cart/cartAdd" class="menu">Añadir</a>
+<a href="/api/carts/cart/cartDel" class="menu">Eliminar</a>
+<a href="/api/carts/cart/cart" class="menu">Ver carrito</a>
+<a href="/api/carts/cart/cartSearch" class="menu">Buscar carrito</a>
