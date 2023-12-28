@@ -5,7 +5,7 @@ import { chatManagerMongo } from "./managers/mongo/chat.mongo.js";
 import { userManagerMongo } from "./managers/mongo/user.mongo.js";
 import { ticketManagerMongo } from "./managers/mongo/ticket.mongo.js";
 
-import { __dirname } from "../utils.js";
+import  __dirname from "../utils.js";
 
 export const productManagerDao = new productManagerMongo();
 export const cartManagerDao = new cartManagerMongo();

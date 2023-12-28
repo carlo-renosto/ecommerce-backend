@@ -24,7 +24,7 @@ export const generateTokenEmail = (email, expireTime) => {
 
 export const sendPwChangeEmail = async(request, email, token) => {
     const domain = `${request.protocol}://${request.get('host')}`;
-    const link = `${domain}/recover-password?token=${token}`;
+    const link = `${domain}/api/sessions/recover-form?token=${token}`;
 
     await transport.sendMail({
         from: "Ecommerce",

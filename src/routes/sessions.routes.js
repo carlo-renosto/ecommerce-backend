@@ -25,7 +25,8 @@ router.get("/recover", (request, response) => {
 });
 
 router.get("/recover-form", (request, response) => {
-    response.render("recoverForm");
+    const token = request.query.token;
+    response.render("recoverForm", {token});
 });
 
 router.post("/user-login", authenticate("loginLocalStrategy"), async(request, response) => {
@@ -33,15 +34,15 @@ router.post("/user-login", authenticate("loginLocalStrategy"), async(request, re
     response.cookie("cookieToken", token, {httpOnly: true}).redirect("/profile");
 });
 
-router.post("/user-signup", authenticate("signupLocalStrategy"), async(request, response) => {
-    response.render("login", {message: "Usuario registrado"});
-});
-
 router.get("/user-login-github", authenticate("loginGithubStrategy"));
 
 router.get(`${config.github.callback_url}-login`, authenticate("loginGithubStrategy"), (request, response) => {
     const token = generateToken(request.user);
     response.cookie("cookieToken", token, {httpOnly: true}).redirect("/profile");
+});
+
+router.post("/user-signup", authenticate("signupLocalStrategy"), async(request, response) => {
+    response.render("login", {message: "Usuario registrado"});
 });
 
 router.get("/user-signup-github", authenticate("signupGithubStrategy"));
@@ -81,7 +82,7 @@ router.post("/user-recover-form", async(request, response) => {
         const user = await userService.getUserByEmail(email);
         user._doc.password = createPasswordHash(password);
 
-        await userService.updateUser(user._id, user);
+        await userService.updateUser(user._id, user._doc);
 
         response.render("login", {message: "Contraseña reestablecida"});
     }

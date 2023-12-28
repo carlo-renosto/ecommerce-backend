@@ -5,13 +5,13 @@ import cookieParser from "cookie-parser";
 import { connectDB } from "./config/dbconnection.js";
 
 import { engine } from 'express-handlebars';
-import { __dirname } from "./utils.js";
+import  __dirname from "./utils.js";
 import path from "path";
 
 import passport from "passport";
 import { initializePassport } from "./config/passport.config.js";
 
-import { logger } from "./config/logger.js";
+import { logger } from "./config/configLogger.js";
 
 import { socketServer } from "./websocket/socketserver.js";
 
@@ -20,6 +20,9 @@ import { productsRouter } from "./routes/products.routes.js";
 import { cartsRouter } from "./routes/carts.routes.js";
 import { chatsRouter } from "./routes/chats.routes.js";
 import { sessionsRouter } from "./routes/sessions.routes.js";
+
+import swaggerUI from "swagger-ui-express";
+import { swaggerSpecs } from './config/configSwagger.js';
 
 const port = 8080; 
 const app = express(); 
@@ -47,6 +50,7 @@ app.use("/api/products", productsRouter);
 app.use("/api/carts", cartsRouter);
 app.use("/api/chats", chatsRouter);
 app.use("/api/sessions", sessionsRouter);
+app.use("/api/docs", swaggerUI.serve , swaggerUI.setup(swaggerSpecs));
 app.use(viewsRouter);
 
 app.get("/loggerTest", (request, response) => {

@@ -1,6 +1,6 @@
 
 import { ticketsModel } from "../../models/tickets.models.js";
-import { logger } from "../../../config/logger.js";
+import { logger } from "../../../config/configLogger.js";
 
 export class ticketManagerMongo {
     constructor() { 

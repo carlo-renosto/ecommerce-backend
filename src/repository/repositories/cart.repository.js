@@ -4,7 +4,7 @@ import { productManagerDao } from "../../dao/index.js";
 import { userManagerDao } from "../../dao/index.js";
 import { ticketManagerDao } from "../../dao/index.js";
 
-import { logger } from "../../config/logger.js";
+import { logger } from "../../config/configLogger.js";
 
 export class cartsRepository {
     constructor() {

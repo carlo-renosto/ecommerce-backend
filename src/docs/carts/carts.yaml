@@ -1,0 +1,96 @@
+
+paths:
+  /api/carts/:
+    post:
+      summary: Crear un nuevo carrito
+      tags: 
+      - Carritos
+      responses: 
+        "200":
+          description: El carrito ha sido creado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: "#components/schemas/Cart"
+        "500":
+          description: Hubo un problema en el servidor
+  /api/carts/{cid}:
+    get:
+      summary: Obtener la información de un carrito
+      tags:
+      - Carritos
+      responses:
+        "200":
+          description: El carrito se obtuvo exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: "#components/schemas/Cart"
+        "500":
+          description: Hubo un problema en el servidor
+    put:
+      summary: Actualizar la información de un carrito
+      tags:
+      - Carritos
+      responses:
+        "200":
+          description: El carrito se actualizó exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: "#components/schemas/CartUpdateSuccess"
+        "500":
+          description: Hubo un problema en el servidor
+    delete:
+      summary: Eliminar un carrito
+      tags:
+      - Carritos
+      responses:
+        "200":
+          description: El carrito se eliminó correctamente
+          content:
+            application/json:
+              schema:
+                $ref: "#components/schemas/CartDeleteSuccess"
+        "500":
+          description: Hubo un problema en el servidor
+
+components:
+  schemas:
+    Cart:
+      type: object
+      properties:
+        _id:
+          type: ObjectId
+          description: ID generado por la base de datos (requerido*)
+        products:
+          type: array
+          description: Productos del carrito
+          items: 
+            $ref: "#components/schemas/CartProduct"
+      example:
+        _id: ObjectId("$hjsg892778234sd")
+        products: 
+          - _id: ObjectId("$zjsg892348234sf")
+            quantity: 5
+    CartUpdateSuccess:
+      type: object
+      properties:
+        status:
+          type: string
+        data:
+          type: string
+      example:
+        status: success
+        data: Carrito actualizado exitosamente
+    CartDeleteSuccess:
+      type: object
+      properties:
+        status:
+          type: string
+        data:
+          type: string
+      example:
+        status: success
+        data: Carrito eliminado correctamente          
+    

@@ -4,12 +4,15 @@ import { config } from './config/config.js';
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 
-import path from 'path';
+import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 
 import { faker } from "@faker-js/faker";
 
-export const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+export default __dirname;
 
 export const createPasswordHash = (password) => {
     return bcrypt.hashSync(password, bcrypt.genSaltSync())

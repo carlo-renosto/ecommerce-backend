@@ -1,0 +1,156 @@
+
+paths:
+  /api/products/:
+    get:
+      summary: Obtener todos los productos de la base de datos
+      tags: 
+      - Productos
+      responses: 
+        "200":
+          description: Los productos se obtuvieron exitosamente
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  $ref: "#components/schemas/Product"
+        "500":
+          description: Hubo un problema en el servidor
+    post:
+      summary: Crear un nuevo producto
+      tags: 
+      - Productos
+      responses: 
+        "200":
+          description: El producto ha sido creado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: "#components/schemas/Product"
+        "500":
+          description: Hubo un problema en el servidor
+  /api/products/{pid}:
+    get:
+      summary: Obtener la información de un producto
+      tags:
+        - Productos
+      parameters:
+        - name: pid
+          in: path
+          required: true
+          description: El ID del producto a consultar
+          schema:
+            $type: string
+      responses:
+        "200":
+          description: El producto se obtuvo exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: "#components/schemas/Product"
+        "500":
+          description: Hubo un problema en el servidor
+    put:
+      summary: Actualizar la información de un producto
+      tags:
+        - Productos
+      parameters:
+        - name: pid
+          in: path
+          required: true
+          description: El ID del producto a consultar
+          schema:
+            $type: string
+      responses:
+        "200":
+          description: El producto se actualizó exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: "#components/schemas/ProductUpdateSuccess"
+        "500":
+          description: Hubo un problema en el servidor
+    delete: 
+      summary: Eliminar un producto
+      tags:
+        - Productos
+      parameters:
+        - name: pid
+          in: path
+          required: true
+          description: El ID del producto a consultar
+          schema:
+            $type: string
+      responses:
+        "200":
+          description: El producto se eliminó correctamente
+          content:
+            application/json:
+              schema:
+                $ref: "#components/schemas/ProductDeleteSuccess"
+        "500":
+          description: Hubo un problema en el servidor
+
+
+components:
+  schemas:
+    Product:
+      type: object
+      properties: 
+        _id:
+          type: ObjectId
+          description: ID generado por la base de datos (requerido*)
+        title:
+          type: string
+          description: Título del producto
+        description: 
+          type: string
+          description: Descripción del producto
+        code:
+          type: string
+          description: Código del producto (único)
+        price:
+          type: number
+          description: Precio del producto
+        stock:
+          type: number
+          description: Stock del producto
+        category:
+          type: string
+          description: Categoría del producto
+        owner:
+          type: string
+          description: Dueño (creador) del producto
+        thumbnail:
+          type: string
+          description: Imagen del producto
+      example:
+        _id: ObjectId("$hjsg892778234sd")
+        title: Samsung Galaxy S20
+        description: Teléfono móvil de alta gama marca Samsung
+        code: abc123
+        price: 25000
+        stock: 25
+        category: "Teléfonos"
+        owner: ObjectId("$hzst892778264sd")
+        thumbnail: Sin imagen
+    ProductUpdateSuccess:
+      type: object
+      properties:
+        status:
+          type: string
+        data:
+          type: string
+      example:
+        status: success
+        data: Producto actualizado exitosamente
+    ProductDeleteSuccess:
+      type: object
+      properties:
+        status:
+          type: string
+        data:
+          type: string
+      example:
+        status: success
+        data: Producto eliminado correctamente

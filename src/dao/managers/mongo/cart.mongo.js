@@ -1,6 +1,6 @@
 
 import { cartsModel } from "../../models/carts.models.js";
-import { logger } from "../../../config/logger.js";
+import { logger } from "../../../config/configLogger.js";
 import { customError } from "../../../repository/errors/customError.service.js";
 import { invalidIdError } from "../../../repository/errors/invalidIdError.js";
 import { duplicatedIdError } from "../../../repository/errors/duplicatedIdError.js";

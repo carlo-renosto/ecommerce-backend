@@ -1,6 +1,6 @@
 
 import { chatManagerDao } from "../../dao/index.js";
-import { logger } from "../../config/logger.js";
+import { logger } from "../../config/configLogger.js";
 
 export class chatRepository {
     constructor() {

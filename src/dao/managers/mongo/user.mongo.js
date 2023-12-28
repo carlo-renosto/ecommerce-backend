@@ -1,6 +1,6 @@
 
 import { usersModel } from "../../models/users.models.js";
-import { logger } from "../../../config/logger.js";
+import { logger } from "../../../config/configLogger.js";
 import { customError } from "../../../repository/errors/customError.service.js";
 import { invalidIdError } from "../../../repository/errors/invalidIdError.js";
 import { duplicatedEmailError } from "../../../repository/errors/duplicatedEmailError.js";

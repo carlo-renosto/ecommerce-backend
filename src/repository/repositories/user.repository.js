@@ -4,7 +4,7 @@ import { cartManagerDao } from "../../dao/index.js";
 
 import { usersDto } from "../../dao/dto/users.dto.js";
 
-import { logger } from "../../config/logger.js";
+import { logger } from "../../config/configLogger.js";
 
 export class userRepository {
     constructor() {

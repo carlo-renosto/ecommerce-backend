@@ -1,6 +1,6 @@
 
 import { chatModel } from "../../models/chat.model.js";
-import { logger } from "../../../config/logger.js";
+import { logger } from "../../../config/configLogger.js";
 
 export class chatManagerMongo {
     constructor() {

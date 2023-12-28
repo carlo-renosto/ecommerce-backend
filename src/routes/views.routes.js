@@ -32,11 +32,6 @@ router.get("/mockingproducts", (request, response) => {
     response.json({message: "success", data: products});
 });
 
-router.get("/recover-password", (request, response) => {
-    const token = request.query.token;
-    response.render("recoverForm", {token});
-});
-
 router.get("/profile", authenticate("jwt-auth"), authenticate("currentStrategy"), usersController.getUserCurrent);
 
 export { router as viewsRouter };
