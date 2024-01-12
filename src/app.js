@@ -61,3 +61,5 @@ app.get("/loggerTest", (request, response) => {
     logger.fatal("Fatal message");
     response.sendStatus(204);
 });
+
+export { app };
