@@ -8,3 +8,14 @@ error: Error (cart.mongo.js): {
  "code": "5",
  "cause": "Se ha recibido un ID inválido. El ID no pertenece a ninguna búsqueda."
 }
+error: Error (cart.mongo.js): {
+ "name": "ID inválido",
+ "code": "5",
+ "cause": "Se ha recibido un ID inválido. El ID no pertenece a ninguna búsqueda."
+}
+error: Error (cart.mongo.js): {
+ "name": "Cannot read properties of null (reading 'toObject')"
+}
+error: Error (cart.mongo.js): {
+ "name": "Cannot read properties of null (reading 'toObject')"
+}

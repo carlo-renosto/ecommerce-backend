@@ -53,7 +53,8 @@ export class userRepository {
     async getUserPopulate(email) {
         try {
             const user = await this.dao.getUserByEmail(email);
-            const cart = await this.daoC.getCartByUid(user._id);
+            let cart = await this.daoC.getCartByUid(user._id);
+            if(!cart) cart = [];
 
             const userDto = new usersDto(user, cart);
 

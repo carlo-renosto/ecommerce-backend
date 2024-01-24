@@ -67,14 +67,13 @@ export class cartManagerMongo {
 
             if(isPopulated) {
                 cart = await this.model.findOne({_uid: uid}).populate({path: "products._id", model: "products"});
-                if(cart == null) customError.createError(invalidIdError("Get cart error"));
+                if(!cart) return null;
 
                 cart = cart.toObject();
                 cart.products = cart.products.map(product => ({product: product._id, quantity: product.quantity}));
             }
             else {
                 cart = await this.model.findOne({_uid: uid}).lean();
-                if(cart == null) customError.createError(invalidIdError("Get cart error"));
             }
         
             return cart;

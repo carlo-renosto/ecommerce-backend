@@ -9,7 +9,7 @@ export class usersController {
             response.render("perfilcurrent", {user: userCurrent});
         }
         catch(error) {
-            response.json({status: "error", message: "Usuario no obtenido (error)"});
+            response.json({status: "error", message: error.message});
         }
     }
 
