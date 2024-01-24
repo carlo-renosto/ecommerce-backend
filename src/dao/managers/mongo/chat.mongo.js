@@ -14,6 +14,7 @@ export class chatManagerMongo {
         }
         catch(error) {
             logger.error("Error (chat.mongo.js): " + error.message);
+            throw error;
         }
     }
 
@@ -24,6 +25,7 @@ export class chatManagerMongo {
         }
         catch(error) {
             logger.error("Error (chat.mongo.js): " + error.message);
+            throw error;
         }
     }
 }

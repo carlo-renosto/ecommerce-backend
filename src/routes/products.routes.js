@@ -21,6 +21,7 @@ router.post("/", authenticate("jwt-auth"), authorize(["premium", "admin"]), prod
 router.put("/:pid", authenticate("jwt-auth"), authorize(["admin"]), invalidParamErrorHandler, productsController.updateProduct);
 
 router.delete("/:pid", authenticate("jwt-auth"), authorize(["premium", "admin"]), invalidParamErrorHandler, productsController.deleteProduct);
+
 router.post("/:pid", authenticate("jwt-auth"), authorize(["premium", "admin"]), invalidParamErrorHandler, productsController.deleteProduct)
 
 export { router as productsRouter };

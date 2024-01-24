@@ -26,7 +26,7 @@ export class cartManagerMongo {
             }
             
             logger.error("Error (cart.mongo.js): " + JSON.stringify(errorLog, null, 1));
-            return -1;
+            throw error;
         }
     }
 
@@ -57,7 +57,7 @@ export class cartManagerMongo {
             }
 
             logger.error("Error (cart.mongo.js): " + JSON.stringify(errorLog, null, 1));
-            return -1;
+            throw error;
         }
     }
 
@@ -87,7 +87,7 @@ export class cartManagerMongo {
             }
 
             logger.error("Error (cart.mongo.js): " + JSON.stringify(errorLog, null, 1));
-            return -1;
+            throw error;
         }
     }
 
@@ -108,29 +108,7 @@ export class cartManagerMongo {
             }
 
             logger.error("Error (cart.mongo.js): " + JSON.stringify(errorLog, null, 1));
-            return -1;
-        }
-    }
-
-    async updateCartProduct(cid, cart) {
-        try {
-            await this.model.findByIdAndUpdate(cid, cart);
-            
-            const cartUpdated = await this.model.findById(cid);
-            if(cartUpdated == null) customError.createError(invalidIdError("Get cart error"));
-
-
-            return cartUpdated;
-        }
-        catch(error) {
-            const errorLog = {
-                name: error.message,
-                code: error.code,
-                cause: error.cause
-            }
-
-            logger.error("Error (cart.mongo.js): " + JSON.stringify(errorLog, null, 1));
-            return -1;
+            throw error;
         }
     }
 
@@ -151,28 +129,7 @@ export class cartManagerMongo {
             }
 
             logger.error("Error (cart.mongo.js): " + JSON.stringify(errorLog, null, 1));
-            return -1;
-        }
-    }
-
-    async deleteCartProduct(cid, cart) {
-        try {   
-            await this.model.findByIdAndUpdate(cid, cart);
-
-            const cartUpdated = await this.model.findById(cid);
-            if(cartUpdated == null) customError.createError(invalidIdError("Get cart error"));
-
-            return cartUpdated;
-        }
-        catch(error) {
-            const errorLog = {
-                name: error.message,
-                code: error.code,
-                cause: error.cause
-            }
-
-            logger.error("Error (cart.mongo.js): " + JSON.stringify(errorLog, null, 1));
-            return -1;
+            throw error;
         }
     }
 
@@ -191,8 +148,7 @@ export class cartManagerMongo {
             }
 
             logger.error("Error (cart.mongo.js): " + JSON.stringify(errorLog, null, 1));
-            return -1;
+            throw error;
         }
     }
-    
 }

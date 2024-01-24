@@ -5,8 +5,6 @@ import { authenticate } from "../middlewares/auth.js";
 
 import { createPasswordHash, generateToken } from "../utils.js";
 
-import { usersController } from "../controller/users.controller.js";
-
 import { generateTokenEmail, sendPwChangeEmail, verifyTokenEmail } from "../config/configGmail.js";
 import { userService } from "../repository/index.js";
 
@@ -92,10 +90,20 @@ router.post("/user-recover-form", async(request, response) => {
     }
 });
 
-router.get("/logout", (request, response) => { 
-    response.clearCookie("cookieToken").redirect("/api/sessions/login");
+router.get("/logout", authenticate("jwt-auth"), async(request, response) => { 
+    try {
+        response.clearCookie("cookieToken").redirect("/api/sessions/login");
+
+        const user = await userService.getUserById(request.user.id);
+        
+        user.last_connection = Date.now();
+        await userService.updateUser(user._id, user);
+    }
+    catch(error) {
+        console.log(error);
+        response.json({status: "error", message: "Sesión no finalizada (error)"});
+    }
 });
 
-router.get("/current", authenticate("currentStrategy"), usersController.getUserCurrent);
 
 export { router as sessionsRouter };

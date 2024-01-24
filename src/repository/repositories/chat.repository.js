@@ -1,6 +1,5 @@
 
 import { chatManagerDao } from "../../dao/index.js";
-import { logger } from "../../config/configLogger.js";
 
 export class chatRepository {
     constructor() {
@@ -13,7 +12,7 @@ export class chatRepository {
             return messages;
         }
         catch(error) {
-            logger.error("Error (chat.repository.js): " + error.message);
+            throw error;
         }
     }
 
@@ -23,7 +22,7 @@ export class chatRepository {
             return message;
         }
         catch(error) {
-            logger.error("Error (chat.repository.js): " + error.message);
+            throw error;
         }
     }
 }

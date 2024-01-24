@@ -22,6 +22,18 @@ export const generateTokenEmail = (email, expireTime) => {
     return token;
 };
 
+export const verifyTokenEmail = (token) => {
+    try {
+        const info = jwt.verify(token, config.gmail.secretToken);
+
+        return info.email;
+    } 
+    catch(error) {
+        console.log(error.message);
+        return null;
+    }
+};
+
 export const sendPwChangeEmail = async(request, email, token) => {
     const domain = `${request.protocol}://${request.get('host')}`;
     const link = `${domain}/api/sessions/recover-form?token=${token}`;
@@ -36,17 +48,5 @@ export const sendPwChangeEmail = async(request, email, token) => {
 
             <p>Nota: Este es un mensaje de prueba.</p>
         `
-    })
-};
-
-export const verifyTokenEmail = (token) => {
-    try {
-        const info = jwt.verify(token, config.gmail.secretToken);
-
-        return info.email;
-    } 
-    catch(error) {
-        console.log(error.message);
-        return null;
-    }
+    });
 };

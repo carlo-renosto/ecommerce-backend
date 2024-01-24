@@ -17,6 +17,7 @@ export class userManagerMongo {
         }
         catch(error) {
             logger.error("Error (user.mongo.js): " + error.message);
+            throw error;
         }
     }
 
@@ -27,6 +28,7 @@ export class userManagerMongo {
         }
         catch(error) {
             logger.error("Error (user.mongo.js): " + error.message);
+            throw error;
         }
     }
 
@@ -45,26 +47,19 @@ export class userManagerMongo {
             }
 
             logger.error("Error (user.mongo.js): " + JSON.stringify(errorLog, null, 1));
-            return null;
+            throw error;
         }
     }
 
     async getUserByEmail(email) {
         try {
             const user = await this.model.findOne({email: email});
-            if(user == null) customError.createError(duplicatedEmailError("Get user error"));
 
             return user;
         }
         catch(error) {
-            const errorLog = {
-                name: error.message,
-                code: error.code,
-                cause: error.cause
-            }
-
-            logger.error("Error (user.mongo.js): " + JSON.stringify(errorLog, null, 1));
-            return null;
+            logger.error("Error (user.mongo.js): " + error.message);
+            throw error;
         }
     }
 
@@ -76,6 +71,7 @@ export class userManagerMongo {
         } 
         catch(error) {
             logger.error("Error (user.mongo.js): " + error.message);
+            throw error;
         }
     }
 }

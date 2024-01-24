@@ -14,7 +14,7 @@ export class chatsController {
             setTimeout(() => socket_server.sendMessages({object: {users: users, role: role}}, response), 100)            
         }
         catch(error) {
-            response.json({status: "error", message: error.message});
+            response.json({status: "error", message: "Mensajes no obtenidos (error)"});
         }
     };
 

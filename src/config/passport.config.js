@@ -108,7 +108,10 @@ export const initializePassport = () => {
                     return done(null, false);
                 }
 
-                return done(null, user);
+                user.last_connection = Date.now();
+                const userUpdated = await userService.updateUser(user._id, user);
+
+                return done(null, userUpdated);
             } 
             catch (error) {
                 return done(error);

@@ -14,7 +14,7 @@ export class productManagerMongo {
     async createProduct(productInfo) {
         try {
             const productExisting = await this.getProductByCode(productInfo.code);
-            if(productExisting != -1) customError.createError(duplicatedCodeError("Create product error"));
+            if(productExisting) customError.createError(duplicatedCodeError("Create product error"));
 
             const product = await this.model.create(productInfo);
             return product;
@@ -27,7 +27,7 @@ export class productManagerMongo {
             }
 
             logger.error("Error (product.mongo.js): " + JSON.stringify(errorLog, null, 1));
-            return -1;
+            throw error;
         }
     }
 
@@ -60,7 +60,7 @@ export class productManagerMongo {
             }
 
             logger.error("Error (product.mongo.js): " + JSON.stringify(errorLog, null, 1));
-            return -1;
+            throw error;
         }
     }
 
@@ -79,14 +79,13 @@ export class productManagerMongo {
             }
 
             logger.error("Error (product.mongo.js): " + JSON.stringify(errorLog, null, 1));
-            return -1;
+            throw error;
         }
     }
 
     async getProductByCode(code) {
         try {
             const product = await this.model.findOne({code: code});
-            if(product == null) customError.createError(invalidCodeError("Get product error"));
 
             return product;
         }
@@ -98,7 +97,7 @@ export class productManagerMongo {
             }
 
             logger.error("Error (product.mongo.js): " + JSON.stringify(errorLog, null, 1));
-            return -1;
+            throw error;
         }
     }
 
@@ -119,7 +118,7 @@ export class productManagerMongo {
             }
 
             logger.error("Error (product.mongo.js): " + JSON.stringify(errorLog, null, 1));
-            return -1;
+            throw error;
         }
     }
 
@@ -136,7 +135,7 @@ export class productManagerMongo {
             }
 
             logger.error("Error (product.mongo.js): " + JSON.stringify(errorLog, null, 1));
-            return -1;
+            throw error;
         }
     }
 }

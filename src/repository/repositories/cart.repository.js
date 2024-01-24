@@ -22,7 +22,7 @@ export class cartsRepository {
             return cart;
         }
         catch(error) {
-            logger.error("Error (cart.repository.js): " + error.message);
+            throw error;
         }
     }
 
@@ -33,7 +33,7 @@ export class cartsRepository {
             return cart;
         }
         catch(error) {
-            logger.error("Error (cart.repository.js): " + error.message);
+            throw error;
         }
     }
 
@@ -44,14 +44,13 @@ export class cartsRepository {
             return cart;
         }
         catch(error) {
-            logger.error("Error (cart.repository.js): " + error.message);
+            throw error;
         }
     }
 
     async updateCart(cid, cartProducts) {
         try {
             var cart = await this.dao.getCartById(cid, false);
-            if(cart == -1) return -1;
             
             cart.products = [...cart.products, ...cartProducts];
 
@@ -59,14 +58,13 @@ export class cartsRepository {
             return cartUpdated;
         }
         catch(error) {
-            logger.error("Error (cart.repository.js): " + error.message);
+            throw error;
         }
     }
 
     async updateCartProduct(cid, pid, quantity) {
         try {
             var cart = await this.dao.getCartById(cid, false);
-            if(cart == -1) return -1;
 
             await this.daoP.getProductById(pid);
    
@@ -80,18 +78,17 @@ export class cartsRepository {
                 cart.products[index].quantity += quantity;
             }
 
-            const cartUpdated = await this.dao.updateCartProduct(cid, cart);
+            const cartUpdated = await this.dao.updateCart(cid, cart);
             return cartUpdated;
         }
         catch(error) {
-            logger.error("Error (cart.repository.js): " + error.message);
+            throw error;
         }
     }
 
     async deleteCart(cid) {
         try {
             var cart = await this.dao.getCartById(cid, false);
-            if(cart == -1) return -1;
 
             cart.products = [];
 
@@ -99,47 +96,37 @@ export class cartsRepository {
             return cartCleared;
         }
         catch(error) {
-            logger.error("Error (cart.repository.js): " + error.message);
+            throw error;
         }
     }
 
     async deleteCartProduct(cid, pid) {
         try {
             var cart = await this.dao.getCartById(cid, false);
-            if(cart == -1) return -1;
 
-            var product = await this.daoP.getProductById(pid);
-            if(product == -1) return -1;
+            await this.daoP.getProductById(pid);
 
             var index = cart.products.findIndex(prod => prod._id == pid);
-            if(index == -1) return -1;
+            if(index == -1) throw new Error(`Producto (ID ${pid}) no encontrado en el carrito (ID ${cid})`);
 
             cart.products = cart.products.filter(prod => prod._id.toString() !== pid);
 
-            const cartUpdated = await this.dao.deleteCartProduct(cid, cart);
+            const cartUpdated = await this.dao.updateCart(cid, cart);
             return cartUpdated;
         }
         catch(error) {
-            const errorLog = {
-                name: error.message,
-                code: error.code,
-                cause: error.cause
-            }
-
-            logger.error("Error (cart.mongo.js): " + JSON.stringify(errorLog, null, 1));
-            return -1;
+            logger.error("Error (cart.repository.js): " + JSON.stringify(error.message, null, 1));
+            throw error;
         }
     }
 
     async purchaseCart(cid) {
         try {
             const cart = await this.dao.getCartById(cid);
-            if(cart == -1) return -1;
 
             var priceTotal = 0;
 
             const updatedProducts = await Promise.all(cart.products.map(async(product) => {
-
                 var productStore = await this.daoP.getProductById(product.product._id);
 
                 if(product.product.stock >= product.quantity) {
@@ -167,7 +154,7 @@ export class cartsRepository {
             return ticket;
         }   
         catch(error) {
-            logger.error("Error (cart.repository.js): " + error.message);
+            throw error;
         }
     }
 }

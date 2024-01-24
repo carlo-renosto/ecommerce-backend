@@ -11,7 +11,6 @@ export class productsController {
             const sort = request.query.sort == undefined ? 0 : parseInt(request.query.sort);
     
             var products = await productsService.getProducts(limit, page, query, sort);
-            if(products == -1) throw new Error();
                     
             response.json({status: "success", data: products});
         }
@@ -23,7 +22,6 @@ export class productsController {
     static getProductsView = async(request, response) => {
         try {
             const products = await productsService.getProducts(10, 1);
-            if(products == -1) throw new Error();
 
             const object = {
                 products: products,
@@ -61,7 +59,6 @@ export class productsController {
             const id = request.params.pid;
     
             const product = await productsService.getProductById(id);
-            if(product == -1) throw new Error();
 
             response.json({status: "success", data: product});
         }
@@ -76,7 +73,6 @@ export class productsController {
             productInfo.owner = request.user.id;
 
             const productCreated = await productsService.createProduct(productInfo);
-            if(productCreated == -1) throw new Error();
     
             socket_server.socket.emit("product-add", productCreated);
     
@@ -93,7 +89,6 @@ export class productsController {
             const productInfo = request.body;
     
             const productUpdated = await productsService.updateProduct(id, productInfo);
-            if(productUpdated == -1) throw new Error();
     
             socket_server.socket.emit("product-update", productUpdated);
     

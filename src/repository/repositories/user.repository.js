@@ -4,8 +4,6 @@ import { cartManagerDao } from "../../dao/index.js";
 
 import { usersDto } from "../../dao/dto/users.dto.js";
 
-import { logger } from "../../config/configLogger.js";
-
 export class userRepository {
     constructor() {
         this.dao = userManagerDao;
@@ -18,7 +16,7 @@ export class userRepository {
             return user;
         }
         catch(error) {
-            logger.error("Error (user.repository.js): " + error.message);
+            throw error;
         }
     }
 
@@ -28,7 +26,7 @@ export class userRepository {
             return users;
         }
         catch(error) {
-            logger.error("Error (user.repository.js): " + error.message);
+            throw error;
         }
     }
 
@@ -38,7 +36,7 @@ export class userRepository {
             return user;
         }
         catch(error) {
-            logger.error("Error (user.repository.js): " + error.message);
+            throw error;
         }
     }
 
@@ -48,7 +46,7 @@ export class userRepository {
             return user;
         }
         catch(error) {
-            logger.error("Error (user.repository.js): " + error.message);
+            throw error;
         }
     }
 
@@ -62,7 +60,7 @@ export class userRepository {
             return userDto;
         }
         catch(error) {
-            logger.error("Error (user.repository.js): " + error.message);
+            throw error;
         }
     }
 
@@ -73,7 +71,23 @@ export class userRepository {
             return userUpdated;
         }
         catch(error) {
-            logger.error("Error (user.repository.js): " + error.message);
+            throw error;
+        }
+    }
+
+    async updateUserRole(id) {
+        try {
+            const user = await this.dao.getUserById(id);
+
+            if(user) {
+                user.role = "premium";
+                await this.dao.updateUser(id, user);
+            }
+            
+            return user;
+        }
+        catch(error) {
+            throw error;
         }
     }
 }

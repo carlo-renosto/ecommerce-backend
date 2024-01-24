@@ -14,7 +14,7 @@ export class productsRepository {
             return product;
         }
         catch(error) {
-            logger.error("Error (product.repository.js): " + error.message);
+            throw error;
         }
     }
 
@@ -24,7 +24,7 @@ export class productsRepository {
             return products;
         }
         catch(error) {
-            logger.error("Error (product.repository.js): " + error.message);
+            throw error;
         }
     }
 
@@ -34,7 +34,7 @@ export class productsRepository {
             return product;
         }   
         catch(error) {
-            logger.error("Error (product.repository.js): " + error.message);
+            throw error;
         }
     }
 
@@ -44,7 +44,7 @@ export class productsRepository {
             return product;
         }
         catch(error) {
-            logger.error("Error (product.repository.js): " + error.message);
+            throw error;
         }
     }
 

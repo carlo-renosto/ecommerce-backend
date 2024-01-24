@@ -9,7 +9,11 @@ const userSchema = new mongoose.Schema({
     email: { type: String, unique: true},
     age: Number,
     password: String,
-    role: { type: String, enum: ["user", "premium", "admin"], default: "user" }
+    status: { type: String, enum: ["pendiente", "incompleto", "completo"], default: "pendiente", required: true},
+    role: { type: String, enum: ["user", "premium", "admin"], default: "user" },
+    avatar: { type: String, default: "" },
+    documents: { type: [{name: String, reference: String}], default: [] },
+    last_connection: { type: Date, default: null }
 });
 
 export const usersModel = mongoose.model(usersCollection, userSchema);
