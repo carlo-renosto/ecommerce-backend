@@ -80,9 +80,12 @@ export class userRepository {
         try {
             const user = await this.dao.getUserById(id);
 
-            if(user) {
+            if(user && user.documents.length == 3) {
                 user.role = "premium";
                 await this.dao.updateUser(id, user);
+            }
+            else {
+                throw new Error();
             }
             
             return user;
