@@ -6,6 +6,9 @@ import { authenticate } from "../middlewares/auth.js";
 import { createPasswordHash, generateToken } from "../utils.js";
 
 import { generateTokenEmail, sendPwChangeEmail, verifyTokenEmail } from "../config/configGmail.js";
+
+import { uploadProfile } from "../utils.js";
+
 import { userService } from "../repository/index.js";
 
 const router = Router();
@@ -39,7 +42,7 @@ router.get(`${config.github.callback_url}-login`, authenticate("loginGithubStrat
     response.cookie("cookieToken", token, {httpOnly: true}).redirect("/profile");
 });
 
-router.post("/user-signup", authenticate("signupLocalStrategy"), async(request, response) => {
+router.post("/user-signup", uploadProfile.single("avatar"), authenticate("signupLocalStrategy"), (request, response) => {
     response.render("login", {message: "Usuario registrado"});
 });
 

@@ -31,7 +31,7 @@ export const initializePassport = () => {
             usernameField: "email"
         },
         async(request, username, password, done) => {
-            const {first_name} = request.body;
+            const {first_name, last_name, age} = request.body;
             try {
                 const user = await userService.getUserByEmail(username);
                 if(user) {
@@ -40,11 +40,14 @@ export const initializePassport = () => {
 
                 const userNew = {
                     first_name,
-                    last_name: request.body.last_name,
+                    last_name,
                     email: username,
-                    age: request.body.age,
-                    password: createPasswordHash(password)
+                    age,
+                    password: createPasswordHash(password),
+                    avatar: request.file.filename
                 };
+
+                console.log(request.body);
 
                 const userCreated = await userService.createUser(userNew);
                 return done(null, userCreated);
