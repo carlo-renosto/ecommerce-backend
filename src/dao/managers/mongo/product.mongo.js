@@ -64,6 +64,23 @@ export class productManagerMongo {
         }
     }
 
+    async getProductsOwner(owner) {
+        try {
+            let options = {
+                lean: true,
+                limit: 10,
+                page: 1,
+            }
+
+            const products = await this.model.paginate({owner: owner}, options);
+            return products;
+        }
+        catch(error) {
+            logger.error("Error (product.mongo.js): " + JSON.stringify(errorLog, null, 1));
+            throw error;
+        }
+    }
+
     async getProductById(id) {
         try {
             const product = await this.model.findById(id);

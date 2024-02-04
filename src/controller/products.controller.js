@@ -22,19 +22,33 @@ export class productsController {
     static getProductsView = async(request, response) => {
         try {
             const products = await productsService.getProducts(10, 1);
-
-            const object = {
-                products: products,
-                email: request.user.email,
-                role: request.user.role
-            }
-
-            response.render("productsView", {object});
+            response.render("productsView", products);
         }
         catch(error) {
             response.render("products");
         }
-    }
+    };
+
+    static getProductsViewDropdown = async(request, response) => {
+        try {
+            let option = request.query.dropdown;
+            let owner = request.user.id;
+
+            let products = [];
+
+            if(option == "0") {
+                products = await productsService.getProducts(10, 1);
+            }
+            else {
+                products = await productsService.getProductsOwner(owner);
+            }
+            
+            response.render("productsView", products);
+        }
+        catch(error) {
+            response.render("products");
+        }
+    };
 
     static getProductsCreate = (request, response) => {
         try {
@@ -43,16 +57,34 @@ export class productsController {
         catch(error) {
             response.render("products");
         }
-    }
+    };
 
-    static getProductsDelete = (request, response) => {
+    static getProductsSearch = (request, response) => {
         try {
-            response.render("productsDelete");
+            response.render("productsSearch");
         }
         catch(error) {
             response.render("products");
         }
-    }
+    };
+
+    static getProductsSearchView = async(request, response) => {
+        try {
+            let pid = request.query.pid;
+
+            const product = await productsService.getProductById(pid);
+
+            if(product) {
+                response.render("productsSearch", {product: product});
+            }
+            else {
+                response.render("productsSearch", {error: "Producto no encontrado"});
+            }            
+        }
+        catch(error) {
+            response.render("productsSearch", {error: "Producto no encontrado"});
+        }
+    };
 
     static getProductById = async(request, response) => {
         try {
@@ -80,6 +112,22 @@ export class productsController {
         }
         catch(error) {
             response.json({status: "error", message: "Producto no agregado (error)"});
+        }
+    };
+
+    static createProductView = async(request, response) => {
+        try {
+            const productInfo = request.body;
+            productInfo.owner = request.user.id;
+
+            const productCreated = await productsService.createProduct(productInfo);
+    
+            socket_server.socket.emit("product-add", productCreated);
+    
+            response.render("productsAdd", {message: "Producto añadido"});
+        }
+        catch(error) {
+            response.render("productsAdd", {error: "Producto no añadido (error)"});
         }
     };
 

@@ -1,12 +1,12 @@
 
 import passport from "passport";
+import jwt from "passport-jwt"
 import localStrategy from "passport-local";
 import GithubStrategy from "passport-github2";
-import jwt from "passport-jwt"
 
 import { config } from "./config.js";
-import { userService } from "../repository/index.js";
-import { createPasswordHash, comparePasswordHash } from "../utils.js";
+import { userService, cartsService } from "../repository/index.js";
+import { createPasswordHash, comparePasswordHash } from "../utils/hash.js";
 
 const JWTStrategy = jwt.Strategy;
 const JWTExtract = jwt.ExtractJwt;
@@ -47,9 +47,8 @@ export const initializePassport = () => {
                     avatar: request.file.filename
                 };
 
-                console.log(request.body);
-
                 const userCreated = await userService.createUser(userNew);
+                await cartsService.createCart(userCreated._id);
                 return done(null, userCreated);
             } 
             catch(error) {
@@ -79,7 +78,7 @@ export const initializePassport = () => {
                 };
 
                 const userCreated = await userService.createUser(newUser);
-
+                await cartsService.createCart(userCreated._id);
                 return done(null, userCreated);
             } 
             catch(error) {

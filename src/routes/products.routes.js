@@ -1,22 +1,28 @@
 
 import { Router } from "express";
 import { productsController } from "../controller/products.controller.js";
-import { authenticate, authorize } from "../middlewares/auth.js";
-import { invalidParamErrorHandler } from "../middlewares/error.js";
+import { authenticate, authorize } from "../utils/middlewares/auth.js";
+import { invalidParamErrorHandler } from "../utils/middlewares/error.js";
 
 const router = Router();
  
 router.get("/", productsController.getProducts);
 
-router.get("/products", authenticate("jwt-auth"), productsController.getProductsView);
+router.get("/productsView", authenticate("jwt-auth"), productsController.getProductsView);
 
-router.get("/productsAdd", authenticate("jwt-auth"), productsController.getProductsCreate);
+router.get("/productsViewDropdown", authenticate("jwt-auth"), productsController.getProductsViewDropdown);
 
-router.get("/productsDel", authenticate("jwt-auth"), productsController.getProductsDelete);
+router.get("/productsAdd", authenticate("jwt-auth"), authorize(["premium", "admin"], true, "products"), productsController.getProductsCreate);
+
+router.get("/productsSearch", authenticate("jwt-auth"), authorize(["premium", "admin"], true, "products"), productsController.getProductsSearch);
+
+router.get("/productsSearchView", authenticate("jwt-auth"), productsController.getProductsSearchView);
 
 router.get("/:pid", invalidParamErrorHandler, productsController.getProductById);
 
 router.post("/", authenticate("jwt-auth"), authorize(["premium", "admin"]), productsController.createProduct);
+
+router.post("/productsAdd", authenticate("jwt-auth"), authorize(["premium", "admin"]), productsController.createProductView);
 
 router.put("/:pid", authenticate("jwt-auth"), authorize(["admin"]), invalidParamErrorHandler, productsController.updateProduct);
 

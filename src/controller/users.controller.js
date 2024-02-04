@@ -6,7 +6,7 @@ export class usersController {
         try {
             const userCurrent = await userService.getUserPopulate(request.user.email);
             
-            response.render("perfilcurrent", {user: userCurrent});
+            response.render("perfil", {user: userCurrent});
         }
         catch(error) {
             response.json({status: "error", message: error.message});

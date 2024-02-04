@@ -26,15 +26,19 @@
     bottom: 80px;
 }
 
-h3, button {
+h3 {
     display: inline-block;
 }
 
-.hidden {
+.button-extend {
+    display: inline-block;
+}
+
+.element-hidden {
     display: none;
 }
 
-.visible {
+.element-visible {
     display: block;
 }
 

@@ -1,112 +1,38 @@
 
 import { Router } from "express";
+import { sessionsController } from "../controller/sessions.controller.js";
 import { config } from "../config/config.js";
-import { authenticate } from "../middlewares/auth.js";
+import { authenticate } from "../utils/middlewares/auth.js";
 
-import { createPasswordHash, generateToken } from "../utils.js";
 
-import { generateTokenEmail, sendPwChangeEmail, verifyTokenEmail } from "../config/configGmail.js";
-
-import { uploadProfile } from "../utils.js";
-
-import { userService } from "../repository/index.js";
+import { uploadProfile } from "../utils/multer.js";
 
 const router = Router();
 
-router.get("/login", (request, response) => {
-    response.render("login");
-});
+router.get("/login", sessionsController.login);
 
-router.get("/signup", (request, response) => {
-    response.render("signup");
-});
+router.get("/signup", sessionsController.signup);
 
-router.get("/recover", (request, response) => {
-    response.render("recover");
-});
+router.get("/recover", sessionsController.recover);
 
-router.get("/recover-form", (request, response) => {
-    const token = request.query.token;
-    response.render("recoverForm", {token});
-});
+router.get("/recover-form", sessionsController.recoverForm);
 
-router.post("/user-login", authenticate("loginLocalStrategy"), async(request, response) => {
-    const token = generateToken(request.user);
-    response.cookie("cookieToken", token, {httpOnly: true}).redirect("/profile");
-});
+router.post("/login-user", authenticate("loginLocalStrategy"), sessionsController.loginUser);
 
-router.get("/user-login-github", authenticate("loginGithubStrategy"));
+router.get("/login-user-github", authenticate("loginGithubStrategy"));
 
-router.get(`${config.github.callback_url}-login`, authenticate("loginGithubStrategy"), (request, response) => {
-    const token = generateToken(request.user);
-    response.cookie("cookieToken", token, {httpOnly: true}).redirect("/profile");
-});
+router.get(`${config.github.callback_url}-login`, authenticate("loginGithubStrategy"), sessionsController.loginUserGithub);
 
-router.post("/user-signup", uploadProfile.single("avatar"), authenticate("signupLocalStrategy"), (request, response) => {
-    response.render("login", {message: "Usuario registrado"});
-});
+router.post("/signup-user", uploadProfile.single("avatar"), authenticate("signupLocalStrategy"), sessionsController.signupUser);
 
-router.get("/user-signup-github", authenticate("signupGithubStrategy"));
+router.get("/signup-user-github", authenticate("signupGithubStrategy"));
 
-router.get(config.github.callback_url,  authenticate("signupGithubStrategy"), (request, response) => {
-    if(request.isAuthenticated() && request.user) {
-        const token = generateToken(request.user);
-        response.cookie("cookieToken", token, {httpOnly: true}).redirect("/profile");
-    }
-    else {
-        response.render("signup", {error: "Email ya registrado"});
-    }
-});
+router.get(config.github.callback_url,  authenticate("signupGithubStrategy"), sessionsController.signupUserGithub);
 
-router.post("/user-recover", async(request, response) => {
-    try {
-        const email = request.body.email;
+router.get("/logout", authenticate("jwt-auth"), sessionsController.logout);
 
-        const emailToken = generateTokenEmail(email, 10 * 60);
+router.post("/user-recover", sessionsController.recoverFormSend);
 
-        await sendPwChangeEmail(request, email, emailToken);
-
-        response.json({status: "success", message: "Correo enviado"});
-    }
-    catch(error) {
-        console.log(error);
-        response.json({status: "error", message: "Correo no enviado (error)"});
-    }
-});
-
-router.post("/user-recover-form", async(request, response) => {
-    try {
-        const password = request.body.password;
-        const token = request.query.token;
-        const email = verifyTokenEmail(token);
-
-        const user = await userService.getUserByEmail(email);
-        user._doc.password = createPasswordHash(password);
-
-        await userService.updateUser(user._id, user._doc);
-
-        response.render("login", {message: "Contraseña reestablecida"});
-    }
-    catch(error) {
-        console.log(error);
-        response.json({status: "error", message: "Contraseña no reestablecida (error)"});
-    }
-});
-
-router.get("/logout", authenticate("jwt-auth"), async(request, response) => { 
-    try {
-        response.clearCookie("cookieToken").redirect("/api/sessions/login");
-
-        const user = await userService.getUserById(request.user.id);
-        
-        user.last_connection = Date.now();
-        await userService.updateUser(user._id, user);
-    }
-    catch(error) {
-        console.log(error);
-        response.json({status: "error", message: "Sesión no finalizada (error)"});
-    }
-});
-
+router.post("/user-recover-form", sessionsController.recoverPasswordSend);
 
 export { router as sessionsRouter };

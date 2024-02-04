@@ -2,8 +2,6 @@
 import { Server } from "socket.io";
 import { productsService } from "../repository/index.js";
 
-// chat socket
-
 export class socketServer {
     constructor(httpServer) {
         this.socket = new Server(httpServer);
@@ -18,8 +16,8 @@ export class socketServer {
         });
     }
 
-    sendMessages(object) {
-        this.socket.emit("messages", object);                
+    sendMessages(messages) {
+        this.socket.emit("messages", messages);                
     }
 
     addMessage(message) {

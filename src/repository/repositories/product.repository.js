@@ -28,6 +28,16 @@ export class productsRepository {
         }
     }
 
+    async getProductsOwner(owner) {
+        try {
+            const products = await this.dao.getProductsOwner(owner);
+            return products;
+        }
+        catch(error) {
+            throw error;
+        }
+    }
+
     async getProductById(id) {
         try {
             const product = await this.dao.getProductById(id);

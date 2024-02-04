@@ -1,0 +1,35 @@
+
+<link rel="stylesheet" type="text/css" href="/css/products.css">
+
+<h1>Productos - Buscar</h1>
+
+<form method="get" action="/api/products/productsSearchView">
+    <input type="text" placeholder="ID" name="pid" required>
+    <input type="submit" value="Buscar">
+</form>
+
+{{#if product}}
+    <div id="div-products">
+        <div id="div-container">
+            <div id="div-content">
+                <h3>{{this.product.title}}</h3>
+                <button class="button-extend">+</button>
+                <hr>
+                <p>Descripcion: {{this.product.description}}</p>
+                <p>Codigo: {{this.product.code}}</p>
+                <p class="element-hidden">Precio: ${{this.product.price}}</p>
+                <p class="element-hidden">Stock: {{this.product.stock}} unidades</p>
+                <p class="element-hidden">Categoria: {{this.product.category}}</p>
+                <p class="element-hidden">Imagen: {{this.product.thumbnail}}</p>
+            </div>
+        </div>
+    </div>
+        <form method="post" action="/api/carts/productAdd/{{this.product._id}}">
+            <input id="input-product" type="submit" value="Añadir al carrito">
+        </form>
+    </div> 
+{{/if}}
+
+<p style="color: red">{{error}}</p>
+
+<script src="/js/products.js"></script>

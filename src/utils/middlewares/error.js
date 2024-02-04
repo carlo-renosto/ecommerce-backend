@@ -1,8 +1,8 @@
 
-import { logger } from "../config/configLogger.js";
-import { customError } from "../repository/errors/customError.service.js";
-import { invalidBodyError } from "../repository/errors/invalidBodyError.js";
-import { invalidParamError } from "../repository/errors/invalidParamError.js";
+import { logger } from "../../config/configLogger.js";
+import { customError } from "../../repository/errors/customError.service.js";
+import { invalidBodyError } from "../../repository/errors/invalidBodyError.js";
+import { invalidParamError } from "../../repository/errors/invalidParamError.js";
 
 export const invalidBodyErrorHandler = (request, response, next) => {
     try {

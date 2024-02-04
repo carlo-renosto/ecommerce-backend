@@ -42,16 +42,39 @@ export class cartsController {
         }
     }
 
-    static getCartSearch = async(request, response) => {
+    static getCartClear = async(request, response) => {
+        try {
+            const uid = request.user.id;
+    
+            const cart = await cartsService.getCartByUid(uid);
+            const cartUpdated = await cartsService.deleteCart(cart._id);
+
+            response.render("cartsView", cartUpdated);
+        }
+        catch(error) {
+            response.json({status: "error", message: "Carrito no obtenido (error)"});
+        }
+    }
+
+    static getCartSearch = (request, response) => {
+        try {
+            response.render("cartsSearch");
+        }
+        catch(error) {
+            response.json({status: "error", message: "Carrito no obtenido (error)"});
+        }
+    }
+
+    static getCartSearchView = async(request, response) => {
         try {
             const cid = request.query.cid || request.params.cid;
     
             const cart = await cartsService.getCartById(cid);
 
-            response.render("carts", cart);
+            response.render("cartsSearch", cart);
         }
         catch(error) {
-            response.render("carts");
+            response.render("cartsSearch", {error: "Carrito inexistente"});
         }
     }
 
@@ -92,11 +115,14 @@ export class cartsController {
             const pid = request.params.pid;
 
             const product = await productsService.getProductById(pid);
-            if(request.user.id == product.owner) throw new Error("");
+            if(request.user.id == product.owner) {
+                response.render("cartsView", {error: "Producto no añadido. Este producto fue publicado por usted."});
+            }
                 
-            const cartUpdated = await cartsService.updateCartProduct(cid, pid, 1);
+            await cartsService.updateCartProduct(cid, pid, 1);
+            const cartUpdated = await cartsService.getCartById(cid);
 
-            response.json({status: "success", data: cartUpdated});
+            response.render("cartsView", cartUpdated);
         }
         catch(error) {
             response.json({status: "error", message: "Carrito no actualizado (error)"});
@@ -124,6 +150,27 @@ export class cartsController {
             const cartUpdated = await cartsService.deleteCartProduct(cid, pid);
 
             response.json({status: "success", data: cartUpdated});
+        }
+        catch(error) {
+            response.json({status: "error", message: "Carrito no actualizado (error)"});
+        }
+    }
+
+    static deleteCartProductView = async(request, response) => {
+        try {
+            const cid = request.params.cid;
+            const pid = request.params.pid;
+            const admin = request.body.admin;
+
+            await cartsService.deleteCartProduct(cid, pid);
+            const cartUpdated = await cartsService.getCartById(cid);
+
+            if(!admin) {
+                response.render("cartsView", cartUpdated);
+            }
+            else {
+                response.render("cartsSearch", cartUpdated);
+            }
         }
         catch(error) {
             response.json({status: "error", message: "Carrito no actualizado (error)"});

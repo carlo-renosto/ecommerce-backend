@@ -1,19 +1,18 @@
-// npm run start
-
 import express from "express";
-import cookieParser from "cookie-parser";
-import { connectDB } from "./config/dbconnection.js";
+import passport from "passport";
+import swaggerUI from "swagger-ui-express";
 
+import cookieParser from "cookie-parser";
 import { engine } from 'express-handlebars';
-import  __dirname from "./utils.js";
 import path from "path";
 
-import passport from "passport";
-import { initializePassport } from "./config/passport.config.js";
+import  __dirname from "./dirname.js";
 
+import { connectDB } from "./config/configDB.js";
+import { initializePassport } from "./config/configPassport.js";
 import { logger } from "./config/configLogger.js";
-
-import { socketServer } from "./websocket/socketserver.js";
+import { swaggerSpecs } from './config/configSwagger.js';
+import { socketServer } from "./config/configSocket.js";
 
 import { viewsRouter } from "./routes/views.routes.js";
 import { productsRouter } from "./routes/products.routes.js";
@@ -21,9 +20,6 @@ import { cartsRouter } from "./routes/carts.routes.js";
 import { usersRouter } from "./routes/users.routes.js";
 import { chatsRouter } from "./routes/chats.routes.js";
 import { sessionsRouter } from "./routes/sessions.routes.js";
-
-import swaggerUI from "swagger-ui-express";
-import { swaggerSpecs } from './config/configSwagger.js';
 
 const port = 8080; 
 const app = express(); 
@@ -43,6 +39,7 @@ app.use(express.urlencoded({extended: true}));
 app.engine('.hbs', engine({extname: '.hbs', runtimeOptions: {allowProtoMethodsByDefault: true, allowProtoPropertiesByDefault: true}}));
 app.set('view engine', '.hbs');
 app.set('views', path.join(__dirname, "/views"));
+console.log(__dirname);
 
 initializePassport();
 app.use(passport.initialize());

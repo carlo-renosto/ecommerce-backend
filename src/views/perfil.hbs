@@ -8,6 +8,7 @@
         <div id="div-container">
             <div id="div-content">
                 <h3>Nombre: {{user.fullName}}</h3>
+                <h3>Rol: {{user.role}}</h3>
                 <hr>
                 <h3>Carrito</h3>
                 <hr>                
@@ -19,6 +20,9 @@
                     </li>
                 </ul> 
                 {{/each}}
+                {{#unless user.products.length}}
+                    <p>Tu carrito se encuentra vacío.</p>
+                {{/unless}}
             </div>
         </div>
     </div>

@@ -1,19 +1,18 @@
 
-var buttons = document.querySelectorAll(".button");
+var buttons = document.querySelectorAll(".button-extend");
 
-document.getElementById('div-products').addEventListener('click', function(event) {
-    if (event.target.classList.contains('button')) {
-        var button = event.target;
-        var elements = button.parentElement.querySelectorAll('.hidden');
+buttons.forEach(button => {
+    button.addEventListener("click", () => {
+        var elements = button.parentElement.querySelectorAll(".element-hidden");
 
         if(elements.length > 0) {
-            elementsChange(elements, 'hidden', 'visible', button);
-        } 
-        else {
-            elements = button.parentElement.querySelectorAll('.visible');
-            elementsChange(elements, 'visible', 'hidden', button);
+            elementsChange(elements, "element-hidden", "element-visible", button)
         }
-    }
+        else {
+            elements = button.parentElement.querySelectorAll(".element-visible");
+            elementsChange(elements, "element-visible", "element-hidden", button)
+        }
+    });
 });
 
 function elementsChange(elements, classRemove, classAdd, button) {
@@ -22,5 +21,5 @@ function elementsChange(elements, classRemove, classAdd, button) {
         element.classList.add(classAdd);
     });
     
-    button.textContent = classRemove == "hidden" ? "-" : "+";
+    button.textContent = classRemove === "hidden" ? "-" : "+";
 }

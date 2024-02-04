@@ -1,8 +1,12 @@
 
+/* carts */
+
 .menu {
     display: block;
     margin-bottom: 10px;
 }
+
+/* cartsView */
 
 #div-container {
     display: table;
@@ -24,14 +28,18 @@ form {
     margin-bottom: 10px;
 }
 
-.button {
+.button-extend {
     margin-left: 10px;
 }
 
-.hidden {
+#button-delete {
+    display: inline-block;
+}
+
+.element-hidden {
     display: none;
 }
 
-.visible {
+.element-visible {
     display: block;
 }

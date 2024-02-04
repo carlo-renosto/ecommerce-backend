@@ -3,7 +3,7 @@
 
 <h1>Carritos</h1>
 
-<form method="get" action="/carts/:cid">
+<form method="get" action="/api/carts/cart/cartSearchView">
     <input type="text" placeholder="ID" name="cid">
     <input type="submit" value="Buscar">
 </form>
@@ -13,18 +13,31 @@
     <div id="div-content">
         <h3>Carrito ID {{this._id}}</h3>
              
-         {{#each products}}
-         <h4>{{this.product.title}}, ID {{this.product._id}}</h4><button class="button">+</button>
-            <ul class="hidden">
-                <li><p>Codigo: {{this.product.code}}</p></li>
-                <li><p>Precio: ${{this.product.price}}</p></li>
-                <li><p>Stock: {{this.product.stock}} unidades</p></li>
-                <li><p>Categoria: {{this.product.category}}</p></li>
-                <li><p>Imagen: {{this.product.thumbnail}}</p></li>
-            </ul>
-         {{/each}}
+        {{#each products}}
+            <div>
+                <h4>{{this.product.title}}</h4>
+                <button class="button-extend">+</button>
+                <form id="button-delete" method="post" action="/api/carts/{{../_id}}/productDel/{{this.product._id}}">
+                    <input type="hidden" name="admin" value="true">
+                    <input type="submit" value="Eliminar">
+                </form>
+                <ul class="element-hidden">
+                    <li><p>Codigo: {{this.product.code}}</p></li>
+                    <li><p>Precio: ${{this.product.price}}</p></li>
+                    <li><p>Stock: {{this.product.stock}} unidades</p></li>
+                    <li><p>Categoria: {{this.product.category}}</p></li>
+                    <li><p>Imagen: {{this.product.thumbnail}}</p></li>
+                    <li><p>Cantidad: {{this.quantity}}</p></li>
+                </ul>
+            </div>
+        {{/each}}
+        {{#unless this.products.length}}
+            <p>Este carrito se encuentra vacío.</p>
+        {{/unless}}
     </div>
 </div>
 {{/if}}
+
+<p style="color: red">{{error}}</p>
 
 <script src="/js/cart.js"></script>

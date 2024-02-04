@@ -3,7 +3,7 @@
 
 <h1>Sign in</h1>
 
-<form method="post" action="/api/sessions/user-signup" enctype="multipart/form-data">
+<form method="post" action="/api/sessions/signup-user" enctype="multipart/form-data">
     <input type="text" name="first_name" placeholder="Nombre">
     <input type="text" name="last_name" placeholder="Apellido">
     <input type="email" name="email" placeholder="Email">
@@ -13,6 +13,6 @@
     <input type="submit" value="Sign in">
 </form>
 
-<a href="/api/sessions/user-signup-github"><button>Registrarse con Github</button></a>
+<a href="/api/sessions/signup-user-github"><button>Registrarse con Github</button></a>
 
 <p style="color: red">{{error}}</p>

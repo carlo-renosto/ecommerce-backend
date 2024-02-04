@@ -46,7 +46,7 @@ export const sendPwChangeEmail = async(request, email, token) => {
             <p>Hola ${email}, haga clic aquí para recuperar su cuenta:</p>
             <a href="${link}">Recuperar</a>
 
-            <p>Nota: Este es un mensaje de prueba.</p>
+            <p>Nota: Este es un mail de prueba.</p>
         `
     });
 };

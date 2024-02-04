@@ -1,8 +1,8 @@
 
 import { Router } from "express";
-import { authenticate } from "../middlewares/auth.js";
+import { authenticate } from "../utils/middlewares/auth.js";
 import { usersController } from "../controller/users.controller.js";
-import { mockProduct } from "../utils.js";
+import { mockProduct } from "../utils/mock.js";
 
 const router = Router();
 
@@ -18,8 +18,8 @@ router.get("/products", authenticate("jwt-auth"), (request, response) => {
     response.render("products");
 });
 
-router.get("/realtimeproducts", authenticate("jwt-auth"), (request, response) => {
-    response.render("realtimeproducts");
+router.get("/productsrealtime", authenticate("jwt-auth"), (request, response) => {
+    response.render("productsRealTime");
 });
 
 router.get("/mockingproducts", (request, response) => {

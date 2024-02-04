@@ -2,15 +2,15 @@
 <link rel="stylesheet" type="text/css" href="/css/login_signin.css">
 
 <h1>Login</h1>
-<form id="login-form" method="post" action="/api/sessions/user-login">
+<form id="login-form" method="post" action="/api/sessions/login-user">
     <input type="email" name="email" placeholder="Email">
     <input type="password" name="password" placeholder="Contraseña">
     <input type="submit" value="Log in">
 </form>
 
-<a href="/api/sessions/user-login-github"><button>Acceder con Github</button></a>
+<a href="/api/sessions/login-user-github"><button>Acceder con Github</button></a>
 <a id="signin" href="/api/sessions/signup">Registrarse</a>
-<a id="signin" href="/api/sessions/recover">Recuperar contraseña</a>
+<a id="signin" href="/api/sessions/recover">Recuperar cuenta</a>
 
 <p>{{message}}</p>
 <p style="color: red">{{error}}</p>

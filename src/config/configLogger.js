@@ -1,5 +1,5 @@
 
-import __dirname from "../utils.js";
+import __dirname from "../dirname.js";
 import path from "path";
 import dotenv from "dotenv";
 

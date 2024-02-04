@@ -15,15 +15,23 @@ export const authenticate  = (strategy) => {
     }
     
     return passportAuthenticate;
-};
+}
 
-export const authorize = (role) => { 
+export const authorize = (role, render=false, renderPage="") => { 
     return async(request, response, next) => {
-        if(!request.user) return response.status(401).json({error: "Usuario no autenticado"});
+        if(!request.user) {
+            return render ? 
+            response.status(401).render(renderPage, {error: "Usuario no autenticado"}) 
+            : 
+            response.status(401).json({error: "Usuario no autenticado"});  
+        }
 
         if(!role.includes(request.user.role)) {
-            return response.status(403).json({error: "Permisos insuficientes"});
+            return render ?
+            response.status(403).render(renderPage, {error: "Permisos insuficientes"})
+            :
+            response.status(403).json({error: "Permisos insuficientes"});
         };
         next();
-    };
-};
+    }
+}

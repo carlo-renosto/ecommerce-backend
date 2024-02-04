@@ -9,17 +9,29 @@
         <h3>Tu carrito</h3>
              
          {{#each products}}
-         <h4>{{this.product.title}}, ID {{this.product._id}}</h4><button class="button">+</button>
-            <ul class="hidden">
-                <li><p>Codigo: {{this.product.code}}</p></li>
-                <li><p>Precio: ${{this.product.price}}</p></li>
-                <li><p>Stock: {{this.product.stock}} unidades</p></li>
-                <li><p>Categoria: {{this.product.category}}</p></li>
-                <li><p>Imagen: {{this.product.thumbnail}}</p></li>
-            </ul>
+            <div>
+                <h4>{{this.product.title}}</h4>
+                <button class="button-extend">+</button>
+                <form id="button-delete" method="post" action="/api/carts/{{../_id}}/productDel/{{this.product._id}}">
+                    <input type="submit" value="Eliminar">
+                </form>
+                <ul class="element-hidden">
+                    <li><p>Codigo: {{this.product.code}}</p></li>
+                    <li><p>Precio: ${{this.product.price}}</p></li>
+                    <li><p>Stock: {{this.product.stock}} unidades</p></li>
+                    <li><p>Categoria: {{this.product.category}}</p></li>
+                    <li><p>Imagen: {{this.product.thumbnail}}</p></li>
+                    <li><p>Cantidad: {{this.quantity}}</p></li>
+                </ul>
+            </div>
          {{/each}}
+         {{#unless this.products.length}}
+            <p>Su carrito se encuentra vacío.</p>
+        {{/unless}}
     </div>
 </div>
 {{/if}}
+
+<p style="color: red">{{error}}</p>
 
 <script src="/js/cart.js"></script>
