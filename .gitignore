@@ -1,9 +1,8 @@
 
 .env
 
-errors.log
-
 node_modules/
 
 src/multer/
 
+errors.log
