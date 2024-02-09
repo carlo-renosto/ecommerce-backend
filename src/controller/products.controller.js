@@ -1,5 +1,7 @@
 
 import { productsService } from "../repository/index.js";
+import { userService } from "../repository/index.js";
+import { sendPdDeleteEmail } from "../config/configGmail.js";
 import { socket_server } from "../app.js";
 
 export class productsController {
@@ -151,20 +153,26 @@ export class productsController {
         try {
             const id = request.body.pid || request.params.pid;
             
-            if(request.user.role == "premium") {
+            if(request.user?.role == "premium") {
                 await productsService.deleteProduct(id, request.user.id, true);
+                await sendPdDeleteEmail(request, request.user.email);
             }
             else {
+                const product = await productsService.getProductById(id);
                 await productsService.deleteProduct(id);
+
+                if(product.owner && product.owner != "admin") {
+                    const user = await userService.getUserById(product.owner);
+                    await sendPdDeleteEmail(request, user.email, product);
+                }
             }
-            
     
             socket_server.socket.emit("product-delete", id);
     
             response.json({status: "success", pid: id});
         }
         catch(error) {
-            response.json({status: "error", message: "Producto no eliminado (error)"});
+            response.json({status: "error", message: error.message});
         }    
     };
 }
