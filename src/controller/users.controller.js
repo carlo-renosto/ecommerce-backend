@@ -1,15 +1,127 @@
 
 import { userService } from "../repository/index.js";
+import { sendAccDeleteEmail } from "../config/configGmail.js";
 
 export class usersController {
-    static getUserCurrent = async(request, response) => {
+    static getUsers = async(request, response) => {
+        try {
+            const users = await userService.getUsers();
+            const usersMapped = users.map(user => ({
+                name: user.first_name + " " + user.last_name,
+                email: user.email,
+                age: user.age,
+                status: user.status,
+                role: user.role
+            }));
+
+            response.status(200).json({status: "success", users: usersMapped});
+        }
+        catch(error) {
+            response.status(500).json({status: "error", message: "Usuarios no obtenidos (error)"});
+        }
+    }
+
+    static getUsersMenuView = (request, response) => {
+        try {
+            response.status(200).render("users");
+        }
+        catch(error) {
+            response.status(500).render("home");
+        }
+    }
+
+    static getUsersListView = async(request, response) => {
+        try {
+            const users = await userService.getUsers();
+
+            if(users) {
+                response.status(200).render("usersView", {users: users});
+            }
+            else {
+                response.status(500).render("usersView", {error: "Usuarios no obtenidos (error)"});
+            }
+        }
+        catch(error) {
+            response.status(500).render("users");
+        }
+    }
+
+    static deleteUsersManyView = async(request, response) => {
+        try {
+            const users = await userService.getUsers();
+
+            if(users) {
+                let usersDeleted = [];
+                users.forEach(async user => {
+                    let dateCurrent = new Date(Date.now());
+                    let dateMilliseconds = dateCurrent - user.last_connection;
+                    let dateMinutes = (dateMilliseconds / 1000) / 60;
+                    let dateHours = dateMinutes / 60;
+                    let dateDays = dateHours / 24;
+
+                    if(dateDays >= 2 && user.role != "admin") {
+                        usersDeleted.push(user);
+                        await userService.deleteUser(user._id);
+                        await sendAccDeleteEmail(request, user.email);
+                    } 
+                });
+
+                if(usersDeleted.length > 0) {
+                    response.render("usersDelete", {users: usersDeleted});
+                }
+                else {
+                    response.render("usersDelete", {message: "Usuarios no eliminados. Ningun usuario inactivo."});  
+                }
+            }
+            else {
+                response.status(500).render("users", {error: "Usuarios no obtenidos (error)"});
+            }
+        }
+        catch(error) {
+            console.log(error);
+            response.status(500).render("users");
+        }
+    }
+
+    static updateUsersView = async(request, response) => {
+        try {
+            const uid = request.body.uid;
+            const user = await userService.getUserById(uid);
+
+            user.role = user.role === "user" ? "premium" : "user";
+            await userService.updateUser(user._id, user);
+
+            const users = await userService.getUsers();
+            response.status(200).render("usersView", {users: users});
+        }
+        catch(error) {
+            response.status(500).render("users");
+        }
+    }
+
+    static deleteUsersOneView = async(request, response) => {
+        try {
+            const uid = request.body.uid;
+            await userService.deleteUser(uid);
+
+            const users = await userService.getUsers();
+            const usersNew = users.filter(user => user._id !== uid);
+
+            response.status(200).render("usersView", {users: usersNew});
+        }
+        catch(error) {
+            response.status(500).render("users");
+        }
+    }
+
+    static getUserCurrentView = async(request, response) => {
         try {
             const userCurrent = await userService.getUserPopulate(request.user.email);
             
-            response.render("perfil", {user: userCurrent});
+            response.status(200).render("perfil", {user: userCurrent});
         }
         catch(error) {
-            response.json({status: "error", message: error.message});
+            response.status(500).json({status: "error", message: "Usuario no obtenido (error)"});
         }
     }
 
@@ -19,10 +131,10 @@ export class usersController {
 
             const userUpdated = await userService.updateUserRole(uid);
 
-            response.json({status: "success", data: userUpdated});
+            response.status(200).json({status: "success", data: userUpdated});
         }
         catch(error) {
-            response.json({status: "error", message: "Usuario no actualizado (error)"});
+            response.status(500).json({status: "error", message: "Usuario no actualizado (error)"});
         }
     }
 
@@ -56,10 +168,10 @@ export class usersController {
             }
 
             await userService.updateUser(user._id, user);
-            response.json({status: "success", message: "Documentos actualizados"});
+            response.status(200).json({status: "success", message: "Documentos actualizados"});
         } 
         catch(error) {
-            response.json({status: "error", message: "Documentos no actualizados (error)"});
+            response.status(500).json({status: "error", message: "Documentos no actualizados (error)"});
         }
     }
 }

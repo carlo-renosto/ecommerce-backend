@@ -50,3 +50,16 @@ export const sendPwChangeEmail = async(request, email, token) => {
         `
     });
 };
+
+export const sendAccDeleteEmail = async(request, email) => {
+    await transport.sendMail({
+        from: "Ecommerce",
+        to: email,
+        subject: "Eliminación de cuenta",
+        html: `
+            <p>Hola ${email}, su cuenta ha sido eliminada. Razón: Inactividad.</p>
+
+            <p>Nota: Este es un mail de prueba.</p>
+        `
+    });
+}

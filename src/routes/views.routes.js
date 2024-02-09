@@ -32,6 +32,6 @@ router.get("/mockingproducts", (request, response) => {
     response.json({message: "success", data: products});
 });
 
-router.get("/profile", authenticate("jwt-auth"), authenticate("currentStrategy"), usersController.getUserCurrent);
+router.get("/profile", authenticate("jwt-auth"), authenticate("currentStrategy"), usersController.getUserCurrentView);
 
 export { router as viewsRouter };

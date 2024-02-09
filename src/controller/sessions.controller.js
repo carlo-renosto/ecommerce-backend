@@ -44,7 +44,7 @@ export class sessionsController {
             response.clearCookie("cookieToken").redirect("/api/sessions/login");
     
             const user = await userService.getUserById(request.user.id);
-            user.last_connection = Date.now();
+            user.last_connection = new Date(Date.now());
     
             await userService.updateUser(user._id, user);
         }

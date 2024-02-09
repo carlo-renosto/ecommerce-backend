@@ -3,7 +3,6 @@ import { usersModel } from "../../models/users.models.js";
 import { logger } from "../../../config/configLogger.js";
 import { customError } from "../../../repository/errors/customError.service.js";
 import { invalidIdError } from "../../../repository/errors/invalidIdError.js";
-import { duplicatedEmailError } from "../../../repository/errors/duplicatedEmailError.js";
 
 export class userManagerMongo {
     constructor() {
@@ -69,6 +68,19 @@ export class userManagerMongo {
 
             return userUpdated;
         } 
+        catch(error) {
+            logger.error("Error (user.mongo.js): " + error.message);
+            throw error;
+        }
+    }
+
+    async deleteUser(id) {
+        try {
+            const userDeleted = await this.model.findByIdAndDelete(id);
+            if(userDeleted == null) customError.createError(invalidIdError("Get user error"));
+
+            return userDeleted;
+        }
         catch(error) {
             logger.error("Error (user.mongo.js): " + error.message);
             throw error;

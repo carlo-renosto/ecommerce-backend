@@ -44,7 +44,7 @@ export const initializePassport = () => {
                     email: username,
                     age,
                     password: createPasswordHash(password),
-                    avatar: request.file.filename
+                    avatar: request.file?.username
                 };
 
                 const userCreated = await userService.createUser(userNew);
@@ -110,7 +110,7 @@ export const initializePassport = () => {
                     return done(null, false);
                 }
 
-                user.last_connection = Date.now();
+                user.last_connection = new Date(Date.now());
                 const userUpdated = await userService.updateUser(user._id, user);
 
                 return done(null, userUpdated);
@@ -134,7 +134,7 @@ export const initializePassport = () => {
                     return done(null, false);
                 }
 
-                user.last_connection = Date.now();
+                user.last_connection = new Date(Date.now());
                 const userUpdated = await userService.updateUser(user._id, user);
                 
                 return done(null, userUpdated);

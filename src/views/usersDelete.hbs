@@ -1,0 +1,23 @@
+
+<link rel="stylesheet" type="text/css" href="/css/users.css">
+
+<h1>Usuarios - Eliminados (+2 días de inactividad)</h1>
+
+{{#if users}}
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Correo</th>
+        </tr>
+        {{#each users}}
+        <tr>
+            <td>{{this._id}}</td>
+            <td>{{this.first_name}} {{this.last_name}}</td>
+            <td>{{this.email}}</td>
+        </tr>
+        {{/each}}
+    </table>
+{{/if}}
+
+<p>{{message}}</p>

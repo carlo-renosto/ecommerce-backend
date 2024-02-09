@@ -94,4 +94,15 @@ export class userRepository {
             throw error;
         }
     }
+
+    async deleteUser(id) {
+        try {
+            const user = await this.dao.deleteUser(id);
+            
+            return user;
+        }
+        catch(error) {
+            throw error;
+        }
+    }
 }

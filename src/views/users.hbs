@@ -1,0 +1,12 @@
+
+<link rel="stylesheet" type="text/css" href="/css/users.css">
+
+<h1>Usuarios</h1>
+
+{{#unless error}}
+    <a href="/api/users/usersListView" class="menu">Ver usuarios</a>
+    <a href="/api/users/usersDeleteManyView" class="menu">Eliminar usuarios</a>
+    <a href="/api/carts/cart/cartSearch" class="menu">Buscar usuario</a>
+{{/unless}}
+
+<p style="color: red">{{error}}</p>

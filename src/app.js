@@ -1,5 +1,6 @@
 import express from "express";
 import passport from "passport";
+import hbs from "handlebars";
 import swaggerUI from "swagger-ui-express";
 
 import cookieParser from "cookie-parser";
@@ -39,7 +40,10 @@ app.use(express.urlencoded({extended: true}));
 app.engine('.hbs', engine({extname: '.hbs', runtimeOptions: {allowProtoMethodsByDefault: true, allowProtoPropertiesByDefault: true}}));
 app.set('view engine', '.hbs');
 app.set('views', path.join(__dirname, "/views"));
-console.log(__dirname);
+
+hbs.registerHelper('isNotAdmin', function(role) { 
+    return role !== "admin";
+});
 
 initializePassport();
 app.use(passport.initialize());

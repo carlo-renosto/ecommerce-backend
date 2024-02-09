@@ -1,13 +1,25 @@
 
 import { Router } from "express";
 import { usersController } from "../controller/users.controller.js";
-import { authenticate } from "../utils/middlewares/auth.js";
+import { authenticate, authorize } from "../utils/middlewares/auth.js";
 
 import { uploadDocuments } from "../utils/multer.js";
 
 const router = Router();
 
-router.get("/current", authenticate("currentStrategy"), usersController.getUserCurrent);
+router.get("/", usersController.getUsers);
+
+router.get("/usersMenuView", authenticate("jwt-auth"), authorize("admin", true, "users"), usersController.getUsersMenuView);
+
+router.get("/usersListView", authenticate("jwt-auth"), authorize("admin", true, "users"), usersController.getUsersListView);
+
+router.get("/usersDeleteManyView", authenticate("jwt-auth"), authorize("admin", true, "users"), usersController.deleteUsersManyView);
+
+router.post("/usersUpdateView", authenticate("jwt-auth"), authorize("admin", true, "users"), usersController.updateUsersView);
+
+router.post("/usersDeleteOneView", authenticate("jwt-auth"), authorize("admin", true, "users"), usersController.deleteUsersOneView);
+
+router.get("/currentView", authenticate("currentStrategy"), usersController.getUserCurrentView);
 
 router.post("/:uid/documents", uploadDocuments.fields([
     { name: "identificacion", maxCount: 1 },
