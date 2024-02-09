@@ -51,6 +51,19 @@ export const sendPwChangeEmail = async(request, email, token) => {
     });
 };
 
+export const sendPdDeleteEmail = async(request, email, product) => {
+    await transport.sendMail({
+        from: "Ecommerce",
+        to: email,
+        subject: "Eliminación de producto",
+        html: `
+            <p>Hola ${email}, su producto ${product.title} (ID ${product._id}) ha sido eliminado.</p>
+
+            <p>Nota: Este es un mail de prueba.</p>
+        `
+    });
+}
+
 export const sendAccDeleteEmail = async(request, email) => {
     await transport.sendMail({
         from: "Ecommerce",
