@@ -32,4 +32,6 @@ router.post("/:cid/productDel/:pid", cartsController.deleteCartProductView);
 
 router.put("/:cid/purchase", invalidParamErrorHandler, cartsController.purchaseCart);
 
+router.post("/:cid/purchaseView", authenticate("jwt-auth"), invalidParamErrorHandler, cartsController.purchaseCartView);
+
 export { router as cartsRouter };

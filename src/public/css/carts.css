@@ -36,6 +36,11 @@ form {
     display: inline-block;
 }
 
+#button-purchase {
+    position: relative;
+    left: 40%;
+}
+
 .element-hidden {
     display: none;
 }

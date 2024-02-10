@@ -7,8 +7,8 @@
 <div id="div-container">
     <div id="div-content">
         <h3>Tu carrito</h3>
-             
-         {{#each products}}
+        <hr>
+        {{#each products}}
             <div>
                 <h4>{{this.product.title}}</h4>
                 <button class="button-extend">+</button>
@@ -25,6 +25,12 @@
                 </ul>
             </div>
          {{/each}}
+         {{#if this.products.length}}
+            <hr>
+            <form method="post" action="/api/carts/{{this._id}}/purchaseView">
+                <input type="submit" value="Comprar">
+            </form>
+         {{/if}}
          {{#unless this.products.length}}
             <p>Su carrito se encuentra vacío.</p>
         {{/unless}}

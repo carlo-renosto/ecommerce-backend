@@ -189,4 +189,17 @@ export class cartsController {
             response.json({status: "error", message: "Carrito no comprado (error)"});
         }
     }
+
+    static purchaseCartView = async(request, response) => {
+        try {
+            const cid = request.params.cid;
+    
+            await cartsService.purchaseCart(cid);
+
+            response.render("carts", {message: "Carrito comprado exitosamente."});
+        }
+        catch(error) {
+            response.json({status: "error", message: "Carrito no comprado (error)"});
+        }
+    }
 }
