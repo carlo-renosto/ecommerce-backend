@@ -1,0 +1,10 @@
+
+<h1>Carrito comprado exitosamente</h1>
+
+ {{#if ticket}}
+    <ul>
+        <li>Ticket ID: {{ticket._id}}</li>
+        <li>Codigo: {{ticket.code}}</li>
+        <li>Total: ${{ticket.amount}}</li>
+    </ul>
+ {{/if}}

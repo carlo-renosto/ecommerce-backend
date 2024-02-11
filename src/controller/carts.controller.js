@@ -194,9 +194,9 @@ export class cartsController {
         try {
             const cid = request.params.cid;
     
-            await cartsService.purchaseCart(cid);
+            const ticket = await cartsService.purchaseCart(cid);
 
-            response.render("carts", {message: "Carrito comprado exitosamente."});
+            response.render("ticket", {ticket: ticket});
         }
         catch(error) {
             response.json({status: "error", message: "Carrito no comprado (error)"});
