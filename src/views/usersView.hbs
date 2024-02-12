@@ -8,7 +8,6 @@
         <tr>
             <th>Nombre</th>
             <th>Correo</th>
-            <th>Edad</th>
             <th>Rol</th>
             <th>Estado</th>
             <th></th>
@@ -16,9 +15,8 @@
         </tr>
         {{#each users}}
         <tr>
-            <td>{{this.first_name}} {{this.last_name}}</td>
+            <td>{{this.firstName}} {{this.lastName}}</td>
             <td>{{this.email}}</td>
-            <td>{{this.age}}</td>
             <td>{{this.role}}</td>
             <td>{{this.status}}</td>
             <td>

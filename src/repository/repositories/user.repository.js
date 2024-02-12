@@ -3,6 +3,7 @@ import { userManagerDao } from "../../dao/index.js";
 import { cartManagerDao } from "../../dao/index.js";
 
 import { usersDto } from "../../dao/dto/users.dto.js";
+import { usersImportantDto } from "../../dao/dto/usersImportant.dto.js";
 
 export class userRepository {
     constructor() {
@@ -24,6 +25,23 @@ export class userRepository {
         try {
             const users = await this.dao.getUsers();
             return users;
+        }
+        catch(error) {
+            throw error;
+        }
+    }
+
+    async getUsersDto() {
+        try {
+            const users = await this.dao.getUsers();
+
+            const usersDto = [];
+
+            users.forEach(user => {
+                usersDto.push(new usersImportantDto(user));
+            })
+
+            return usersDto;
         }
         catch(error) {
             throw error;

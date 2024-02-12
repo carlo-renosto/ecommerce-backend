@@ -5,16 +5,9 @@ import { sendAccDeleteEmail } from "../config/configGmail.js";
 export class usersController {
     static getUsers = async(request, response) => {
         try {
-            const users = await userService.getUsers();
-            const usersMapped = users.map(user => ({
-                name: user.first_name + " " + user.last_name,
-                email: user.email,
-                age: user.age,
-                status: user.status,
-                role: user.role
-            }));
+            const users = await userService.getUsersDto();
 
-            response.status(200).json({status: "success", users: usersMapped});
+            response.status(200).json({status: "success", users: users});
         }
         catch(error) {
             response.status(500).json({status: "error", message: "Usuarios no obtenidos (error)"});
@@ -32,7 +25,7 @@ export class usersController {
 
     static getUsersListView = async(request, response) => {
         try {
-            const users = await userService.getUsers();
+            const users = await userService.getUsersDto();
 
             if(users) {
                 response.status(200).render("usersView", {users: users});
@@ -91,7 +84,7 @@ export class usersController {
             user.role = user.role === "user" ? "premium" : "user";
             await userService.updateUser(user._id, user);
 
-            const users = await userService.getUsers();
+            const users = await userService.getUsersDto();
             response.status(200).render("usersView", {users: users});
         }
         catch(error) {
@@ -104,7 +97,7 @@ export class usersController {
             const uid = request.body.uid;
             await userService.deleteUser(uid);
 
-            const users = await userService.getUsers();
+            const users = await userService.getUsersDto();
             const usersNew = users.filter(user => user._id !== uid);
 
             response.status(200).render("usersView", {users: usersNew});
@@ -172,6 +165,37 @@ export class usersController {
         } 
         catch(error) {
             response.status(500).json({status: "error", message: "Documentos no actualizados (error)"});
+        }
+    }
+
+    static deleteUsersMany = async(request, response) => {
+        const users = await userService.getUsers();
+
+        if(users) {
+            let usersDeleted = [];
+            users.forEach(async user => {
+                let dateCurrent = new Date(Date.now());
+                let dateMilliseconds = dateCurrent - user.last_connection;
+                let dateMinutes = (dateMilliseconds / 1000) / 60;
+                let dateHours = dateMinutes / 60;
+                let dateDays = dateHours / 24;
+
+                if(dateDays >= 2 && user.role != "admin") {
+                    usersDeleted.push(user);
+                    await userService.deleteUser(user._id);
+                    await sendAccDeleteEmail(request, user.email);
+                } 
+            });
+
+            if(usersDeleted.length > 0) {
+                response.status(200).json({status: "success", users: usersDeleted});
+            }
+            else {
+                response.status(404).json({status: "error", message: "Usuarios no eliminados (ningun usuario inactivo)"});  
+            }
+        }
+        else {
+            response.status(500).json({status: "error", message: "Usuarios no eliminados (error)"});
         }
     }
 }

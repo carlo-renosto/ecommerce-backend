@@ -29,4 +29,6 @@ router.post("/:uid/documents", uploadDocuments.fields([
 
 router.put("/premium/:uid", usersController.updateUserRole);
 
+router.delete("/", usersController.deleteUsersMany);
+
 export { router as usersRouter }
