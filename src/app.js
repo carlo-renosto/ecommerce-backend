@@ -22,7 +22,7 @@ import { usersRouter } from "./routes/users.routes.js";
 import { chatsRouter } from "./routes/chats.routes.js";
 import { sessionsRouter } from "./routes/sessions.routes.js";
 
-const port = 8080; 
+const port = process.env.PORT || 8080; 
 const app = express(); 
 connectDB();
 
