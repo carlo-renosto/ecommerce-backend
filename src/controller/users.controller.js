@@ -3,17 +3,6 @@ import { userService } from "../repository/index.js";
 import { sendAccDeleteEmail } from "../config/configGmail.js";
 
 export class usersController {
-    static getUsers = async(request, response) => {
-        try {
-            const users = await userService.getUsersDto();
-
-            response.status(200).json({status: "success", users: users});
-        }
-        catch(error) {
-            response.status(500).json({status: "error", message: "Usuarios no obtenidos (error)"});
-        }
-    }
-
     static getUsersMenuView = (request, response) => {
         try {
             response.status(200).render("users");
@@ -115,6 +104,17 @@ export class usersController {
         }
         catch(error) {
             response.status(500).json({status: "error", message: "Usuario no obtenido (error)"});
+        }
+    }
+
+    static getUsers = async(request, response) => {
+        try {
+            const users = await userService.getUsersDto();
+
+            response.status(200).json({status: "success", users: users});
+        }
+        catch(error) {
+            response.status(500).json({status: "error", message: "Usuarios no obtenidos (error)"});
         }
     }
 

@@ -5,22 +5,6 @@ import { sendPdDeleteEmail } from "../config/configGmail.js";
 import { socket_server } from "../app.js";
 
 export class productsController {
-    static getProducts = async(request, response) => {
-        try {
-            const limit = request.query.limit == undefined ? 10 : parseInt(request.query.limit);
-            const page = request.query.page == undefined ? 1 : parseInt(request.query.page);
-            const query = request.query.query == undefined ? "" : request.query.query;
-            const sort = request.query.sort == undefined ? 0 : parseInt(request.query.sort);
-    
-            var products = await productsService.getProducts(limit, page, query, sort);
-                    
-            response.json({status: "success", data: products});
-        }
-        catch(error) {
-            response.json({status: "error", message: "Productos no obtenidos (error)"});
-        }
-    };
-
     static getProductsView = async(request, response) => {
         try {
             const products = await productsService.getProducts(10, 1);
@@ -29,7 +13,7 @@ export class productsController {
         catch(error) {
             response.render("products");
         }
-    };
+    }
 
     static getProductsViewDropdown = async(request, response) => {
         try {
@@ -50,27 +34,43 @@ export class productsController {
         catch(error) {
             response.render("products");
         }
-    };
+    }
 
-    static getProductsCreate = (request, response) => {
+    static createProductView = (request, response) => {
         try {
             response.render("productsAdd");
         }
         catch(error) {
             response.render("products");
         }
-    };
+    }
 
-    static getProductsSearch = (request, response) => {
+    static createProductViewSubmit = async(request, response) => {
+        try {
+            const productInfo = request.body;
+            productInfo.owner = request.user.id;
+
+            const productCreated = await productsService.createProduct(productInfo);
+    
+            socket_server.socket.emit("product-add", productCreated);
+    
+            response.render("productsAdd", {message: "Producto añadido"});
+        }
+        catch(error) {
+            response.render("productsAdd", {error: "Producto no añadido (error)"});
+        }
+    }
+
+    static searchProductView = (request, response) => {
         try {
             response.render("productsSearch");
         }
         catch(error) {
             response.render("products");
         }
-    };
+    }
 
-    static getProductsSearchView = async(request, response) => {
+    static searchProductViewSubmit = async(request, response) => {
         try {
             let pid = request.query.pid;
 
@@ -86,7 +86,23 @@ export class productsController {
         catch(error) {
             response.render("productsSearch", {error: "Producto no encontrado"});
         }
-    };
+    }
+
+    static getProducts = async(request, response) => {
+        try {
+            const limit = request.query.limit == undefined ? 10 : parseInt(request.query.limit);
+            const page = request.query.page == undefined ? 1 : parseInt(request.query.page);
+            const query = request.query.query == undefined ? "" : request.query.query;
+            const sort = request.query.sort == undefined ? 0 : parseInt(request.query.sort);
+    
+            var products = await productsService.getProducts(limit, page, query, sort);
+                    
+            response.json({status: "success", data: products});
+        }
+        catch(error) {
+            response.json({status: "error", message: "Productos no obtenidos (error)"});
+        }
+    }
 
     static getProductById = async(request, response) => {
         try {
@@ -99,7 +115,7 @@ export class productsController {
         catch(error) {
             response.json({status: "error", message: "Producto no obtenido (error)"});
         }
-    };
+    }
 
     static createProduct = async(request, response) => {
         try {
@@ -115,23 +131,7 @@ export class productsController {
         catch(error) {
             response.json({status: "error", message: "Producto no agregado (error)"});
         }
-    };
-
-    static createProductView = async(request, response) => {
-        try {
-            const productInfo = request.body;
-            productInfo.owner = request.user.id;
-
-            const productCreated = await productsService.createProduct(productInfo);
-    
-            socket_server.socket.emit("product-add", productCreated);
-    
-            response.render("productsAdd", {message: "Producto añadido"});
-        }
-        catch(error) {
-            response.render("productsAdd", {error: "Producto no añadido (error)"});
-        }
-    };
+    }
 
     static updateProduct = async(request, response) => {
         try {
@@ -147,7 +147,7 @@ export class productsController {
         catch(error) {
             response.json({status: "error", message: "Producto no actualizado (error)"});
         }
-    };
+    }
 
     static deleteProduct = async(request, response) => {
         try {
@@ -174,5 +174,5 @@ export class productsController {
         catch(error) {
             response.json({status: "error", message: error.message});
         }    
-    };
+    }
 }

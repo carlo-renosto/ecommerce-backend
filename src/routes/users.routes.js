@@ -7,8 +7,6 @@ import { uploadDocuments } from "../utils/multer.js";
 
 const router = Router();
 
-router.get("/", usersController.getUsers);
-
 router.get("/usersMenuView", authenticate("jwt-auth"), authorize("admin", true, "users"), usersController.getUsersMenuView);
 
 router.get("/usersListView", authenticate("jwt-auth"), authorize("admin", true, "users"), usersController.getUsersListView);
@@ -20,6 +18,8 @@ router.post("/usersUpdateView", authenticate("jwt-auth"), authorize("admin", tru
 router.post("/usersDeleteOneView", authenticate("jwt-auth"), authorize("admin", true, "users"), usersController.deleteUsersOneView);
 
 router.get("/currentView", authenticate("currentStrategy"), usersController.getUserCurrentView);
+
+router.get("/", usersController.getUsers);
 
 router.post("/:uid/documents", uploadDocuments.fields([
     { name: "identificacion", maxCount: 1 },

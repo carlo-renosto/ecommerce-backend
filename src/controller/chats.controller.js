@@ -16,7 +16,7 @@ export class chatsController {
         catch(error) {
             response.json({status: "error", message: "Mensajes no obtenidos (error)"});
         }
-    };
+    }
 
     static addMessage = async(request, response) => {
         try {

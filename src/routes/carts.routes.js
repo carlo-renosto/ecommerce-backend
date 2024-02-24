@@ -8,11 +8,17 @@ const router = Router();
 
 router.get("/cart/cart", authenticate("jwt-auth"), cartsController.getCartView);
 
-router.get("/cart/cartDel", authenticate("jwt-auth"), cartsController.getCartClear);
+router.get("/cart/cartDel", authenticate("jwt-auth"), cartsController.clearCartView);
 
-router.get("/cart/cartSearch", authenticate("jwt-auth"), authorize(["admin"], true, "carts"), cartsController.getCartSearch);
+router.get("/cart/cartSearch", authenticate("jwt-auth"), authorize(["admin"], true, "carts"), cartsController.searchCartView);
 
-router.get("/cart/cartSearchView", authenticate("jwt-auth"), authorize(["admin"]), cartsController.getCartSearchView);
+router.get("/cart/cartSearchView", authenticate("jwt-auth"), authorize(["admin"]), cartsController.searchCartViewSubmit);
+
+router.post("/productAdd/:pid", authenticate("jwt-auth"), cartsController.addCartProductView);
+
+router.post("/:cid/productDel/:pid", cartsController.deleteCartProductView);
+
+router.post("/:cid/purchaseView", authenticate("jwt-auth"), invalidParamErrorHandler, cartsController.purchaseCartView);
 
 router.get("/:cid", invalidParamErrorHandler, cartsController.getCart);
 
@@ -22,16 +28,10 @@ router.put("/:cid", invalidParamErrorHandler, invalidBodyErrorHandler, cartsCont
 
 router.post("/:cid/product/:pid", invalidParamErrorHandler, invalidBodyErrorHandler, cartsController.addCartProduct);
 
-router.post("/productAdd/:pid", authenticate("jwt-auth"), cartsController.addCartProductView);
-
 router.delete("/:cid", invalidParamErrorHandler, cartsController.deleteCart);
 
 router.delete("/:cid/products/:pid", invalidParamErrorHandler, cartsController.deleteCartProduct);
 
-router.post("/:cid/productDel/:pid", cartsController.deleteCartProductView);
-
 router.put("/:cid/purchase", invalidParamErrorHandler, cartsController.purchaseCart);
-
-router.post("/:cid/purchaseView", authenticate("jwt-auth"), invalidParamErrorHandler, cartsController.purchaseCartView);
 
 export { router as cartsRouter };
