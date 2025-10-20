@@ -3,21 +3,23 @@
 
 <h1>Chat</h1>
 
-<div id="centered-div">
-    <ul id="ul-messages">
-        {{#each object.users}}
+<div class="chat-div">
+    <div class="chat-messages"> 
+        <ul class="chat-messages-ul">
+        {{#each users}}
             <li>({{this.name}}): {{this.message}}</li>
         {{/each}}
-    </ul>
-    {{#if object.role}}
+        </ul>
+        {{#if users.empty}}
+            <p>No hay mensajes en este canal.</p>
+        {{/if}}
+    </div>
+    <div class="chat-form">
         <form method="post" action="/api/chats/message-add">
-            <input id="message-submit" type="text" name="message"> 
-            <input id="button" type="submit" value="Enviar">
+            <input class="message-submit" type="text" name="message"> 
+            <input class="message-submit-button" type="submit" value="Enviar">
         </form>
-    {{else}}
-        <input class="hidden" id="message-submit" type="text" name="message"> 
-        <input class="hidden" id="submit" type="button" value="Enviar">
-    {{/if}}
+    </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/handlebars@4.7.7/dist/handlebars.min.js"></script>

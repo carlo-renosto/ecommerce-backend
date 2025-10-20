@@ -26,10 +26,10 @@ const port = process.env.PORT || 8080;
 const app = express(); 
 connectDB();
 
-// server http
+// Conexión al servidor HTTP
 const http_server = app.listen(port, () => console.log("Servidor en ejecucion (https//localhost:8080)"));
 
-// socket
+// Creación del server socket
 export const socket_server = new socketServer(http_server);
 
 app.use(cookieParser());

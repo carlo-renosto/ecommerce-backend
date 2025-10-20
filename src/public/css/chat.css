@@ -1,34 +1,24 @@
 
-#centered-div {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 1000px;
-    height: 600px;
-    background-color: #fff;
+.chat-div {
+    display: flex;
+    flex-direction: column;
+    width: 80%;
     border: 1px solid #ccc;
 }
 
-#message-submit {
-    position: fixed;
-    top: 90%;
-    left: 45%;
-    transform: translate(-45%, -90%);
-}
-
-#button {
-    position: fixed;
-    top: 90%;
-    left: 60%;
-    transform: translate(-60%, -90%);
-}
-
-#message {
+.chat-messages {
+    height: 600px;
     background-color: #fff;
-    border: 1px solid black;
 }
 
-.hidden {
-    display: none;
+.chat-form {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.chat-messages-ul {
+    color: black;
 }

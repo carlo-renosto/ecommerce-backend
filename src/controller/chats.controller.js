@@ -6,12 +6,9 @@ export class chatsController {
     static getMessages = async(request, response) => {
         try {
             const messages = await chatService.getMessages();
-            const role = request.user.role == "user" ? request.user.role : null;
-
-            const users = messages.map(user => ({name: user.user, message: user.message}));
+            const role = (request.user.role == "user" || request.user.role == "premium") ? request.user.role : null;
 
             response.render("chat");
-            setTimeout(() => socket_server.sendMessages({object: {users: users, role: role}}, response), 100)            
         }
         catch(error) {
             response.json({status: "error", message: "Mensajes no obtenidos (error)"});
