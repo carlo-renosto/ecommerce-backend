@@ -1,44 +1,25 @@
 
-/* carts */
-
-.menu {
-    display: block;
-    margin-bottom: 10px;
+.carts-menu-div {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
 }
 
-/* cartsView */
-
-#div-container {
-    display: table;
-    margin-bottom: 10px;
-    overflow: hidden;
+.cart-view-div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
     border: 1px solid #ccc;
 }
 
-#div-content {
-    display: table-cell;
-    padding: 10px;
-}
-
-h4, button {
-    display: inline-block;
-}
-
-form {
-    margin-bottom: 10px;
-}
-
-.button-extend {
-    margin-left: 10px;
-}
-
-#button-delete {
-    display: inline-block;
-}
-
-#button-purchase {
-    position: relative;
-    left: 40%;
+.product-title-div {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
 }
 
 .element-hidden {
@@ -47,4 +28,8 @@ form {
 
 .element-visible {
     display: block;
+}
+
+hr {
+    width: 100%;
 }

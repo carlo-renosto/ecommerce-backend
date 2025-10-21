@@ -3,41 +3,42 @@
 
 <h1>Carritos</h1>
 
-{{#if this._id}}
-<div id="div-container">
-    <div id="div-content">
-        <h3>Tu carrito</h3>
-        <hr>
-        {{#each products}}
-            <div>
-                <h4>{{this.product.title}}</h4>
-                <button class="button-extend">+</button>
-                <form id="button-delete" method="post" action="/api/carts/{{../_id}}/productDel/{{this.product._id}}">
-                    <input type="submit" value="Eliminar">
-                </form>
-                <ul class="element-hidden">
-                    <li><p>Codigo: {{this.product.code}}</p></li>
-                    <li><p>Precio: ${{this.product.price}}</p></li>
-                    <li><p>Stock: {{this.product.stock}} unidades</p></li>
-                    <li><p>Categoria: {{this.product.category}}</p></li>
-                    <li><p>Imagen: {{this.product.thumbnail}}</p></li>
-                    <li><p>Cantidad: {{this.quantity}}</p></li>
-                </ul>
-            </div>
-         {{/each}}
-         {{#if this.products.length}}
+<div>
+    {{#if this._id}}
+        <div class="cart-view-div">
+            <h3>Tu carrito</h3>
             <hr>
-            <form method="post" action="/api/carts/{{this._id}}/purchaseView">
-                <input type="submit" value="Comprar">
-            </form>
-         {{/if}}
-         {{#unless this.products.length}}
-            <p>Su carrito se encuentra vacío.</p>
-        {{/unless}}
-    </div>
-</div>
-{{/if}}
+            {{#if this.products.length}}
+                {{#each products}}
+                    <div>
+                        <div class="product-title-div">
+                            <h4>{{this.product.title}}</h4>
+                            <button class="button-extend">+</button>
+                            <form method="post" action="/api/carts/{{../_id}}/productDel/{{this.product._id}}">
+                                <input type="submit" value="Eliminar">
+                            </form>
+                        </div>
+                        <ul class="element-hidden">
+                            <li><p>Codigo: {{this.product.code}}</p></li>
+                            <li><p>Precio: ${{this.product.price}}</p></li>
+                            <li><p>Stock: {{this.product.stock}} unidades</p></li>
+                            <li><p>Categoria: {{this.product.category}}</p></li>
+                            <li><p>Imagen: {{this.product.thumbnail}}</p></li>
+                            <li><p>Cantidad: {{this.quantity}}</p></li>
+                        </ul>
+                    </div>
+                {{/each}}
+                <hr>
+                <form method="post" action="/api/carts/{{this._id}}/purchaseView">
+                    <input type="submit" value="Comprar">
+                </form>
+            {{else}}
+                <p>Su carrito se encuentra vacío.</p>
+            {{/if}}
+        </div>
+    {{/if}}
 
-<p style="color: red">{{error}}</p>
+    <p style="color: red">{{error}}</p>
+</div>
 
 <script src="/js/cart.js"></script>
