@@ -3,13 +3,13 @@ var buttons = document.querySelectorAll(".button-extend");
 
 buttons.forEach(button => {
     button.addEventListener("click", () => {
-        var elements = button.parentElement.querySelectorAll(".element-hidden");
+        var elements = button.parentElement.parentElement.querySelectorAll(".element-hidden");
 
         if(elements.length > 0) {
             elementsChange(elements, "element-hidden", "element-visible", button)
         }
         else {
-            elements = button.parentElement.querySelectorAll(".element-visible");
+            elements = button.parentElement.parentElement.querySelectorAll(".element-visible");
             elementsChange(elements, "element-visible", "element-hidden", button)
         }
     });
@@ -21,5 +21,5 @@ function elementsChange(elements, classRemove, classAdd, button) {
         element.classList.add(classAdd);
     });
     
-    button.textContent = classRemove === "hidden" ? "-" : "+";
+    button.textContent = classRemove === "element-hidden" ? "-" : "+";
 }

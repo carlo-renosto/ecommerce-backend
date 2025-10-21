@@ -3,7 +3,7 @@
 
 <h1>Productos - Vista</h1>
 
-<form method="get" action="/api/products/productsViewDropdown">
+<form class="products-filter-form" method="get" action="/api/products/productsViewDropdown">
     <select name="dropdown">
         <option value="0">Todos los productos</option>
         <option value="1">Tus productos</option>
@@ -11,14 +11,14 @@
     <input type="submit" value="Buscar">
 </form>
 
-
-{{#each docs}}
-    <div>
-    <div id="div-products">
-        <div id="div-container">
-            <div id="div-content">
-                <h3>{{this.title}}</h3>
-                <button class="button-extend">+</button>
+<div>
+    {{#each docs}}
+        <div class="products-view-div">
+            <div class="product-view-div">
+                <div class="product-title-div">
+                    <h3>{{this.title}}</h3>
+                    <button class="button-extend">+</button>
+                </div>
                 <hr>
                 <p>Descripcion: {{this.description}}</p>
                 <p>Codigo: {{this.code}}</p>
@@ -26,13 +26,12 @@
                 <p class="element-hidden">Stock: {{this.stock}} unidades</p>
                 <p class="element-hidden">Categoria: {{this.category}}</p>
                 <p class="element-hidden">Imagen: {{this.thumbnail}}</p>
-            </div>
+            </div>  
+            <form method="post" action="/api/carts/productAdd/{{this._id}}">
+                <input type="submit" value="Añadir al carrito">
+            </form>
         </div>
-    </div>
-        <form method="post" action="/api/carts/productAdd/{{this._id}}">
-            <input id="input-product" type="submit" value="Añadir al carrito">
-        </form>
-    </div> 
-{{/each}}
+    {{/each}}
+</div> 
 
 <script src="/js/products.js"></script>
