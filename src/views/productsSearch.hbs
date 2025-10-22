@@ -8,28 +8,27 @@
     <input type="submit" value="Buscar">
 </form>
 
-{{#if product}}
-    <div id="div-products">
-        <div id="div-container">
-            <div id="div-content">
+<div class="products-view-div">
+    {{#if product}}
+        <div class="product-view-div">
+            <div class="product-title-div">
                 <h3>{{this.product.title}}</h3>
                 <button class="button-extend">+</button>
-                <hr>
-                <p>Descripcion: {{this.product.description}}</p>
-                <p>Codigo: {{this.product.code}}</p>
-                <p class="element-hidden">Precio: ${{this.product.price}}</p>
-                <p class="element-hidden">Stock: {{this.product.stock}} unidades</p>
-                <p class="element-hidden">Categoria: {{this.product.category}}</p>
-                <p class="element-hidden">Imagen: {{this.product.thumbnail}}</p>
             </div>
-        </div>
-    </div>
+            <hr>
+            <p>Descripcion: {{this.product.description}}</p>
+            <p>Codigo: {{this.product.code}}</p>
+            <p class="element-hidden">Precio: ${{this.product.price}}</p>
+            <p class="element-hidden">Stock: {{this.product.stock}} unidades</p>
+            <p class="element-hidden">Categoria: {{this.product.category}}</p>
+            <p class="element-hidden">Imagen: {{this.product.thumbnail}}</p>
+        </div>  
         <form method="post" action="/api/carts/productAdd/{{this.product._id}}">
-            <input id="input-product" type="submit" value="Añadir al carrito">
+            <input type="submit" value="Añadir al carrito">
         </form>
-    </div> 
-{{/if}}
+    {{/if}}
 
-<p style="color: red">{{error}}</p>
+    <p style="color: red">{{error}}</p>
+</div>
 
 <script src="/js/products.js"></script>
