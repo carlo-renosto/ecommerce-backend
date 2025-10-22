@@ -28,6 +28,37 @@ export class usersController {
         }
     }
 
+    static updateUsersView = async(request, response) => {
+        try {
+            const uid = request.body.uid;
+            const user = await userService.getUserById(uid);
+
+            user.role = user.role === "user" ? "premium" : "user";
+            await userService.updateUser(user._id, user);
+
+            const users = await userService.getUsersDto();
+            response.status(200).render("usersView", {users: users});
+        }
+        catch(error) {
+            response.status(500).render("users");
+        }
+    }
+
+    static deleteUsersOneView = async(request, response) => {
+        try {
+            const uid = request.body.uid;
+            await userService.deleteUser(uid);
+
+            const users = await userService.getUsersDto();
+            const usersNew = users.filter(user => user._id !== uid);
+
+            response.status(200).render("usersView", {users: usersNew});
+        }
+        catch(error) {
+            response.status(500).render("users");
+        }
+    }
+
     static deleteUsersManyView = async(request, response) => {
         try {
             const users = await userService.getUsers();
@@ -65,45 +96,41 @@ export class usersController {
         }
     }
 
-    static updateUsersView = async(request, response) => {
-        try {
-            const uid = request.body.uid;
-            const user = await userService.getUserById(uid);
-
-            user.role = user.role === "user" ? "premium" : "user";
-            await userService.updateUser(user._id, user);
-
-            const users = await userService.getUsersDto();
-            response.status(200).render("usersView", {users: users});
-        }
-        catch(error) {
-            response.status(500).render("users");
-        }
-    }
-
-    static deleteUsersOneView = async(request, response) => {
-        try {
-            const uid = request.body.uid;
-            await userService.deleteUser(uid);
-
-            const users = await userService.getUsersDto();
-            const usersNew = users.filter(user => user._id !== uid);
-
-            response.status(200).render("usersView", {users: usersNew});
-        }
-        catch(error) {
-            response.status(500).render("users");
-        }
-    }
-
     static getUserCurrentView = async(request, response) => {
         try {
-            const userCurrent = await userService.getUserPopulate(request.user.email);
+            const userCurrent = await userService.getUserPopulateByEmail(request.user.email);
             
-            response.status(200).render("perfil", {user: userCurrent});
+            response.status(200).render("profile", {user: userCurrent});
         }
         catch(error) {
             response.status(500).json({status: "error", message: "Usuario no obtenido (error)"});
+        }
+    }
+
+    static searchUserView = (request, response) => {
+        try {
+            response.render("usersSearch");
+        }
+        catch(error) {
+            response.render("users");
+        }
+    }
+
+    static searchUserViewSubmit = async(request, response) => {
+        try {
+            let uid = request.query.uid;
+    
+            const user = await userService.getUserPopulateById(uid);
+    
+            if(user) {
+                response.render("usersSearch", {user: user});
+            }
+            else {
+                response.render("usersSearch", {error: "Usuario no encontrado"});
+            }            
+        }
+        catch(error) {
+            response.render("usersSearch", {error: "Usuario no encontrado"});
         }
     }
 

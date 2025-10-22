@@ -68,7 +68,22 @@ export class userRepository {
         }
     }
 
-    async getUserPopulate(email) {
+    async getUserPopulateById(id) {
+        try {
+            const user = await this.dao.getUserById(id);
+            let cart = await this.daoC.getCartByUid(user._id);
+            if(!cart) cart = [];
+
+            const userDto = new usersDto(user, cart);
+
+            return userDto;
+        }
+        catch(error) {
+            throw error;
+        }
+    }
+
+    async getUserPopulateByEmail(email) {
         try {
             const user = await this.dao.getUserByEmail(email);
             let cart = await this.daoC.getCartByUid(user._id);

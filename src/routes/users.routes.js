@@ -11,11 +11,15 @@ router.get("/usersMenuView", authenticate("jwt-auth"), authorize("admin", true, 
 
 router.get("/usersListView", authenticate("jwt-auth"), authorize("admin", true, "users"), usersController.getUsersListView);
 
-router.get("/usersDeleteManyView", authenticate("jwt-auth"), authorize("admin", true, "users"), usersController.deleteUsersManyView);
+router.get("/usersSearch", authenticate("jwt-auth"), authorize(["premium", "admin"]), usersController.searchUserView);
+
+router.get("/usersSearchView", authenticate("jwt-auth"), authorize(["premium", "admin"]), usersController.searchUserViewSubmit);
 
 router.post("/usersUpdateView", authenticate("jwt-auth"), authorize("admin", true, "users"), usersController.updateUsersView);
 
 router.post("/usersDeleteOneView", authenticate("jwt-auth"), authorize("admin", true, "users"), usersController.deleteUsersOneView);
+
+router.get("/usersDeleteManyView", authenticate("jwt-auth"), authorize("admin", true, "users"), usersController.deleteUsersManyView);
 
 router.get("/currentView", authenticate("currentStrategy"), usersController.getUserCurrentView);
 

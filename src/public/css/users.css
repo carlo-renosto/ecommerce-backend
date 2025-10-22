@@ -1,4 +1,19 @@
 
+.menu {
+    display: block;
+    margin-bottom: 10px;
+}
+
+.user-div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 1rem;
+    padding: 1rem;
+    border: 1px solid #ccc;
+}
+
 table {
     border-collapse: collapse;
 }
@@ -13,7 +28,6 @@ td {
     border: 1px solid black;
 }
 
-.menu {
-    display: block;
-    margin-bottom: 10px;
+hr {
+    width: 100%;
 }

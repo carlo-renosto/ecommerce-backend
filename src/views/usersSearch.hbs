@@ -1,0 +1,35 @@
+
+<link rel="stylesheet" type="text/css" href="/css/users.css">
+
+<h1>Usuarios - Buscar</h1>
+
+<form method="get" action="/api/users/usersSearchView">
+    <input type="text" placeholder="ID" name="uid" required>
+    <input type="submit" value="Buscar">
+</form>
+
+<div>
+    {{#if user}}
+        <div class="user-div">
+            <h3>Nombre: {{user.fullName}}</h3>
+            <h3>Rol: {{user.role}}</h3>
+            <hr>
+            <h3>Carrito</h3>
+            <hr>
+            {{#if user.products.length}}
+                <ul>
+                    {{#each user.products}}
+                        <li>
+                            <p>{{this.product.title}}</p>
+                            <p>Cantidad: {{this.quantity}}</p>
+                        </li>
+                    {{/each}}
+                </ul> 
+            {{else}}
+                <p>Tu carrito se encuentra vacío.</p>
+            {{/if}}
+        </div>
+    {{/if}}
+
+    <p style="color: red">{{error}}</p>
+</div>
