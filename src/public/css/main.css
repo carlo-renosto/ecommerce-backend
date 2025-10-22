@@ -9,6 +9,13 @@
     margin-left: 10px;
 }
 
+.body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
 a {
     background: none;
     border: none;
