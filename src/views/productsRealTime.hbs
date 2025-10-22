@@ -11,12 +11,14 @@
     <input type="submit" value="Buscar">
 </form>
 
-<div id="div-products">
+<div class="products-div">
     {{#each products}}
-        <div id="div-container">
-            <div id="div-content">
-                <h3>{{this.title}}</h3>
-                <button class="button-extend">+</button>
+        <div class="products-view-div">
+            <div class="product-view-div">
+                <div class="product-title-div">
+                    <h3>{{this.title}}</h3>
+                    <button class="button-extend">+</button>
+                </div>
                 <hr>
                 <p>Descripcion: {{this.description}}</p>
                 <p>Codigo: {{this.code}}</p>
@@ -24,15 +26,13 @@
                 <p class="element-hidden">Stock: {{this.stock}} unidades</p>
                 <p class="element-hidden">Categoria: {{this.category}}</p>
                 <p class="element-hidden">Imagen: {{this.thumbnail}}</p>
-            </div>
-        </div>
-        </div>
+            </div>  
             <form method="post" action="/api/carts/productAdd/{{this._id}}">
-                <input id="input-product" type="submit" value="Añadir al carrito">
+                <input type="submit" value="Añadir al carrito">
             </form>
         </div>
     {{/each}}
-</div>
+</div> 
 
 <script src="https://cdn.jsdelivr.net/npm/handlebars@4.7.7/dist/handlebars.min.js"></script>
 <script src="/socket.io/socket.io.js"></script>
