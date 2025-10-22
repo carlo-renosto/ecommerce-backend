@@ -1,0 +1,14 @@
+
+.user-div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    border: 1px solid #ccc;
+}
+
+hr {
+    width: 100%;
+}
+

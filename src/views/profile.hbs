@@ -1,0 +1,24 @@
+
+<link rel="stylesheet" type="text/css" href="/css/profile.css">
+
+<h1>Perfil</h1>
+
+<div class="user-div">
+    <h3>Nombre: {{user.fullName}}</h3>
+    <h3>Rol: {{user.role}}</h3>
+    <hr>
+    <h3>Carrito</h3>
+    <hr>
+    {{#if user.products.length}}
+        <ul>
+            {{#each user.products}}
+                <li>
+                    <p>{{this.product.title}}</p>
+                    <p>Cantidad: {{this.quantity}}</p>
+                </li>
+            {{/each}}
+        </ul> 
+    {{else}}
+        <p>Tu carrito se encuentra vacío.</p>
+    {{/if}}
+</div>
