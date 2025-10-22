@@ -1,7 +1,18 @@
 
-input {
-    display: block;
-    margin-bottom: 10px;
+
+.login-div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
 }
 
 .signin {
