@@ -63,10 +63,10 @@ JWT_PRIVATE_KEY = nombre_jwt_private_key
 2. Ir hasta la opción GitHub Apps. Hacer click en New GitHub App.
 
 3. Rellenar los siguientes datos:
-    -GitHub app name (usar el nombre que se prefiera)
-    -Homepage URL (la URL principal de la app, por ejemplo, http://localhost:8080)
-    -Callback URL 1: http://localhost:8080/api/sessions/github-callback
-    -Callback URL 2: http://localhost:8080/api/sessions/github-callback-login
+    - GitHub app name (usar el nombre que se prefiera)
+    - Homepage URL (la URL principal de la app, por ejemplo, http://localhost:8080)
+    - Callback URL 1: http://localhost:8080/api/sessions/github-callback
+    - Callback URL 2: http://localhost:8080/api/sessions/github-callback-login
 
 4. Hacer click en Create GitHub App.
 
